@@ -9,11 +9,10 @@ import gc
 
 def _read_network(file_name='google_network_raw.csv', replace_pickle=False):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
-    pickle_name = file_name.split('.')[0] + '.p'
+    pickle_name = file_name.split('.')[0] + '.xml.gz'
     pickle_path = os.path.join(CONFIG.DATA_DIR_PATH, pickle_name)
 
     if os.path.isfile(pickle_path) and not replace_pickle:
-        print 'Test'
         return _load_network()
 
     f = open(file_path, 'r')
@@ -24,28 +23,15 @@ def _read_network(file_name='google_network_raw.csv', replace_pickle=False):
     return G
 
 
-def _store_network(network, file_name='google_network_raw.p'):
+def _store_network(network, file_name='google_network_raw.xml.gz'):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
-    f = open(file_path, 'wb')
-
-    gc.disable()
-    cPickle.dump(network, f, protocol=cPickle.HIGHEST_PROTOCOL)
-    gc.enable()
-
-    f.close()
+    network.save(file_path)
 
 
-def _load_network(file_name='google_network_raw.p'):
+def _load_network(file_name='google_network_raw.xml.gz'):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
-    f = open(file_path, 'rb')
-
-    gc.disable()
-    network = cPickle.load(f)
-    gc.enable()
-
-    f.close()
+    network = gt.load_graph(file_path)
     return network
-
 
 def get_network():
     return _network
