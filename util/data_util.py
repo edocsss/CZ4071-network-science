@@ -9,7 +9,7 @@ import gc
 
 def _read_network(file_name='google_network_raw.csv', replace_pickle=False):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
-    pickle_name = file_name.split('.')[0] + '.xml.gz'
+    pickle_name = file_name.split('.')[0] + '.pkl'
     pickle_path = os.path.join(CONFIG.DATA_DIR_PATH, pickle_name)
 
     if os.path.isfile(pickle_path) and not replace_pickle:
@@ -19,18 +19,26 @@ def _read_network(file_name='google_network_raw.csv', replace_pickle=False):
     G = gt.load_graph_from_csv(file_name=f, directed=True, csv_options={'delimiter': '\t'})
     f.close()
 
-    _store_network(G)
+    _store_network(G, file_name=pickle_name)
     return G
 
 
-def _store_network(network, file_name='google_network_raw.xml.gz'):
+def _store_network(network, file_name='google_network_raw.pkl'):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
-    network.save(file_path)
+    f = open(file_path, 'wb')
+    gc.disable()
+    cPickle.dump(network, f)
+    gc.enable()
+    f.close()
 
 
-def _load_network(file_name='google_network_raw.xml.gz'):
+def _load_network(file_name='google_network_raw.pkl'):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
-    network = gt.load_graph(file_path)
+    f = open(file_path, 'rb')
+    gc.disable()
+    network = cPickle.load(f)
+    gc.enable()
+    f.close()
     return network
 
 def get_network():
