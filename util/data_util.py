@@ -53,15 +53,15 @@ if __name__ == '__main__':
     print network.num_vertices()
     print network.num_edges()
 
-    # import time
-    # start = time.time()
-    # print gt_clustering.local_clustering(network, undirected=False)
-    # print 'Time 1:', time.time() - start
-    #
-    # start = time.time()
-    # print gt_clustering.global_clustering(network)
-    # print 'Time 2:', time.time() - start
-    #
+    import time
+    start = time.time()
+    print gt_clustering.local_clustering(network, undirected=False)
+    print 'Time 1:', time.time() - start
+
+    start = time.time()
+    print gt_clustering.global_clustering(network)
+    print 'Time 2:', time.time() - start
+
     # start = time.time()
     # print gt_stats.distance_histogram(network)
     # print 'Time 3:', time.time() - start
