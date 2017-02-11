@@ -2,7 +2,8 @@ from util import data_util
 import json
 import os
 import config as CONFIG
-import copy
+import math
+import matplotlib.pyplot as plt
 
 
 def count_degree():
@@ -33,6 +34,34 @@ def analyze_degree_distribution(degree_count=None):
     return degree_distribution
 
 
+def plot_degree_distribution(degree_distribution=None, plot_loglog=False):
+    if degree_distribution is None:
+        degree_distribution = analyze_degree_distribution()
+
+    x = []
+    y = []
+
+    for k, v in degree_distribution.items():
+        x.append(k)
+        y.append(v)
+
+    if plot_loglog:
+        _show_loglog_plot(x, y)
+    else:
+        _show_usual_plot(x, y)
+
+
+def _show_loglog_plot(x_log, y_log):
+    x_log = [math.log(val) for val in x_log]
+    y_log = [math.log(val) for val in y_log]
+    _show_usual_plot(x_log, y_log)
+
+
+def _show_usual_plot(x, y):
+    plt.scatter(x, y, s=20*0.01)
+    plt.show()
+
+
 def _store_dict_to_json(d, file_name):
     file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, file_name)
     f = open(file_path, 'w')
@@ -46,3 +75,5 @@ if __name__ == '__main__':
 
     degree_distribution = analyze_degree_distribution()
     _store_dict_to_json(degree_distribution, 'degree_distribution.json')
+
+    plot_degree_distribution(degree_distribution, plot_loglog=True)
