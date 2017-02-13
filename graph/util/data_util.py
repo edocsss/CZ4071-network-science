@@ -53,14 +53,4 @@ _network = _read_network(file_name='raw.csv', replace_pickle=False)
 
 if __name__ == '__main__':
     network = get_network()
-    print network.num_vertices()
-    print network.num_edges()
-
-    import time
-    start = time.time()
-    print gt_clustering.local_clustering(network, undirected=True)
-    print 'Time 1:', time.time() - start
-
-    start = time.time()
-    print gt_clustering.global_clustering(network)
-    print 'Time 2:', time.time() - start
+    lc = gt_clustering.local_clustering(network, undirected=True)
