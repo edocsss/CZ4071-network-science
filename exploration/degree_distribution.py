@@ -69,6 +69,10 @@ def _store_dict_to_json(d, file_name):
     f.close()
 
 
+def calculate_moment(degree_count, n=1):
+    return sum([math.pow(c, n) for c in degree_count.values()]) / len(degree_count.values())
+
+
 if __name__ == '__main__':
     degrees = count_degree()
     _store_dict_to_json(degrees, 'degree_count.json')
@@ -76,4 +80,10 @@ if __name__ == '__main__':
     degree_distribution = analyze_degree_distribution()
     _store_dict_to_json(degree_distribution, 'degree_distribution.json')
 
-    plot_degree_distribution(degree_distribution, plot_loglog=True)
+    first_moment = calculate_moment(degrees, n=1)
+    second_moment = calculate_moment(degrees, n=2)
+
+    print('First Moment:', first_moment)
+    print('Second Moment:', second_moment)
+
+    plot_degree_distribution(degree_distribution, plot_loglog=False)
