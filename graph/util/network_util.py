@@ -45,9 +45,19 @@ def calculate_average_clustering_coefficient(network):
 
 
 def store_shortest_distance(network):
-    props = topology.shortest_distance(network, source=None, target=None, directed=False)
-    file_path = os.path.join(CONFIG.DATA_DIR_PATH, 'shortest_distance_props.pkl')
+    vertices = list(network.vertices())
+    result = {}
 
+    for i in range(len(vertices)):
+        v = vertices[i]
+        v_id = int(v)
+
+        for j in range(i + 1, len(vertices)):
+            w = vertices[j]
+            w_id = int(w)
+            result[(v_id, w_id)] = topology.shortest_distance(network, source=v, target=w, directed=False)
+
+    file_path = os.path.join(CONFIG.DATA_DIR_PATH, 'shortest_distance_props.pkl')
     f = open(file_path, 'wb')
-    cPickle.dump(props, f)
+    cPickle.dump(result, f)
     f.close()
