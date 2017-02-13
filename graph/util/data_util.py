@@ -1,9 +1,10 @@
 import config as CONFIG
 import graph_tool as gt
 import os
-import graph_tool.clustering as gt_clustering
+from graph.util import network_util
 import cPickle
 import gc
+import time
 
 
 def _read_network(file_name='raw.csv', replace_pickle=False):
@@ -53,4 +54,8 @@ _network = _read_network(file_name='raw.csv', replace_pickle=False)
 
 if __name__ == '__main__':
     network = get_network()
-    lc = gt_clustering.local_clustering(network, undirected=True)
+    print 'Start'
+
+    start = time.time()
+    network_util.store_shortest_distance(network)
+    print time.time() - start

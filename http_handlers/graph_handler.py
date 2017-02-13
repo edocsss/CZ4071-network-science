@@ -1,4 +1,4 @@
-from graph.util import network_util
+from graph.util import network_util, random_network_util
 from flask import request, Blueprint
 import graph_tool as gt
 import config as CONFIG
@@ -8,7 +8,7 @@ import os
 blueprint = Blueprint('graph_handler', __name__)
 
 
-@blueprint.route('/test', methods=['POST'])
+@blueprint.route('/network', methods=['POST'])
 def handle_graph():
     json = request.get_json()
     graph_csv = json['graphCsv']
@@ -50,16 +50,35 @@ def _compute_real_network_properties(network):
         'degree_distribution': degree_distribution,
         'average_degree': average_degree,
         'degree_second_moment': degree_second_moment,
-        'shortest_path_distribution': None,
-        'average_path_distance': None,
+        'shortest_distance_distribution': None,
+        'average_distance': None,
         'diameter': None,
         'global_clustering_coefficient': global_clustering_coefficient,
         'average_clustering_coefficient': average_clustering_coefficient,
     }
 
 
+# All formulas!
 def _compute_random_network_properties(network):
-    pass
+    no_of_nodes = network.num_vertices()
+    no_of_edges = network.num_edges()
+
+    average_degree = random_network_util.calculate_average_degree(no_of_nodes)
+    degree_distribution = random_network_util.get_degree_distribution(no_of_nodes)
+    regime_type = random_network_util.get_regime_type(no_of_nodes)
+
+    average_distance = random_network_util.calculate_average_distance(no_of_nodes)
+    clustering_coefficient = random_network_util.calculate_clustering_coefficient(no_of_nodes)
+
+    return {
+        'no_of_nodes': no_of_nodes,
+        'no_of_edges': no_of_edges,
+        'degree_distribution': degree_distribution,
+        'average_degree': average_degree,
+        'regime_type': regime_type,
+        'average_distance': average_distance,
+        'clustering_coefficient': clustering_coefficient
+    }
 
 
 def _compute_scale_free_network_properties(network):

@@ -1,6 +1,9 @@
 import math
 import numpy as np
-from graph_tool import clustering
+from graph_tool import clustering, topology
+import cPickle
+import os
+import config as CONFIG
 
 
 def count_degree(network):
@@ -39,3 +42,12 @@ def calculate_average_clustering_coefficient(network):
     lc = clustering.local_clustering(network, undirected=True)
     coeffs = lc.get_array()
     return np.sum(coeffs) / len(coeffs)
+
+
+def store_shortest_distance(network):
+    props = topology.shortest_distance(network, source=None, target=None, directed=False)
+    file_path = os.path.join(CONFIG.DATA_DIR_PATH, 'shortest_distance_props.pkl')
+
+    f = open(file_path, 'wb')
+    cPickle.dump(props, f)
+    f.close()
