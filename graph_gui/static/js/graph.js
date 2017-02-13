@@ -9,16 +9,21 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
-function drawGraph(data_path){
+function drawGraphFromJsonFile(data_path) {
     d3.json(data_path, function(error, graph) {
-    if (error) throw error;
+        if (error) throw error;        
+        drawGraph(graph);
+    });
+}
 
+function drawGraph(graph){
+    svg.selectAll("*").remove();
     var link = svg.append("g")
-        .attr("class", "links")
-        .selectAll("line")
-        .data(graph.links)
-        .enter().append("line")
-        .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+            .attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter().append("line")
+            .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
 
     var node = svg.append("g")
         .attr("class", "nodes")
@@ -53,35 +58,21 @@ function drawGraph(data_path){
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
     }
-    });
 }
 
 function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-  d.fx = d.x;
-  d.fy = d.y;
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
 }
 
 function dragged(d) {
-  d.fx = d3.event.x;
-  d.fy = d3.event.y;
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
 }
 
 function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
 }
-
-$(window).on('load', function() {
-    var data_path = "../data/miserables.json";
-    drawGraph(data_path);
-});
-
-$("#file_select_btn").on('click', function(){
-    $("#file_select").click();
-});
-
-$("#file_select").on('change', function(){
-    $("#file_name").text($('#file_select').val());
-});

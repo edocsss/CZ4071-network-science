@@ -6,7 +6,6 @@ CAIRO = 'cairo'
 GRAPHVIZ = 'graphviz'
 WIDGET = 'widget'
 WINDOW = 'window'
-INTERACTIVE_WINDOW = 'interactive'
 
 def load_graph(file_path):
     return gt.load_graph_from_csv(file_path, directed=False, skip_first=True)
