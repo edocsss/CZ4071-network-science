@@ -54,8 +54,6 @@ _network = _read_network(file_name='raw.csv', replace_pickle=False)
 
 if __name__ == '__main__':
     network = get_network()
-    print 'Start'
-
     start = time.time()
-    network_util.store_shortest_distance(network)
+    network_util.analyze_shortest_distance(network, n_threads=16)
     print time.time() - start

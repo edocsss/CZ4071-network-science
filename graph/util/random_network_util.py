@@ -57,15 +57,3 @@ def generate_random_network(n, p=0.05):
 
     os.remove(temp_file_path)
     return random_network
-
-
-if __name__ == '__main__':
-    n = 100000
-    p = 0.05
-
-    import time
-    network = generate_random_network(n, p)
-
-    start = time.time()
-    print gtt.shortest_distance(network, source=None, target=None, directed=False)
-    print time.time() - start

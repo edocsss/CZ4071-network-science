@@ -3,9 +3,9 @@ import math
 import os
 
 import matplotlib.pyplot as plt
-from graph.util import data_util
 
 import config as CONFIG
+from graph.util import data_util, plot_util
 from graph.util import network_util
 
 
@@ -23,9 +23,16 @@ def plot_degree_distribution(degree_distribution, plot_loglog=False):
         _show_usual_plot(x, y)
 
 
-def _show_loglog_plot(x_log, y_log):
-    x_log = [math.log(val) for val in x_log]
-    y_log = [math.log(val) for val in y_log]
+def plot_log_binned_degree_distribution(degree_count):
+    n, bins = plot_util.log_binning(degree_count, n_bins=50)
+    bin_centers = list((bins[1:] + bins[:-1]) / 2)
+    n = list(n)
+    plot_util.plot_scatter(bin_centers, n, title='Log-Log Degree Distribution', x_label='k', y_label='P(k)', log_log=True)
+
+
+def _show_loglog_plot(x, y):
+    x_log = [math.log(val) for val in x]
+    y_log = [math.log(val) for val in y]
     _show_usual_plot(x_log, y_log)
 
 
@@ -55,3 +62,4 @@ if __name__ == '__main__':
     print('Second Moment:', second_moment)
 
     plot_degree_distribution(degree_distribution, plot_loglog=False)
+    plot_log_binned_degree_distribution(degree_count)

@@ -1,9 +1,9 @@
 import math
+import os
 import numpy as np
 from graph_tool import clustering, topology
-import cPickle
-import os
 import config as CONFIG
+import threading
 
 
 def count_degree(network):
@@ -44,20 +44,39 @@ def calculate_average_clustering_coefficient(network):
     return np.sum(coeffs) / len(coeffs)
 
 
-def store_shortest_distance(network):
+def _shortest_distance_runner(network, thread_id, n_threads=16):
     vertices = list(network.vertices())
-    result = {}
+    l = len(vertices)
 
-    for i in range(len(vertices)):
+    file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'shortest_distance_result_{}.tsv'.format(thread_id))
+    f = open(file_path, 'w')
+    f.close()
+
+    for i in range(thread_id, l, n_threads):
         v = vertices[i]
         v_id = int(v)
+        distance_map = topology.shortest_distance(network, source=v, target=None, directed=False)
 
-        for j in range(i + 1, len(vertices)):
-            w = vertices[j]
-            w_id = int(w)
-            result[(v_id, w_id)] = topology.shortest_distance(network, source=v, target=w, directed=False)
+        f = open(file_path, 'a')
+        f.write('{}'.format(v_id))
 
-    file_path = os.path.join(CONFIG.DATA_DIR_PATH, 'shortest_distance_props.pkl')
-    f = open(file_path, 'wb')
-    cPickle.dump(result, f)
-    f.close()
+        for p in distance_map.get_array():
+            f.write('\t{}'.format(p))
+
+        f.write('\n')
+        f.close()
+
+
+def analyze_shortest_distance(network, n_threads=16):
+    threads = []
+    for i in range(n_threads):
+        t = threading.Thread(target=_shortest_distance_runner, args=(network, i, n_threads,))
+        print 'Starting thread id:', i
+        t.start()
+        threads.append(t)
+
+    print 'Threads created!'
+    for thread in threads:
+        thread.join()
+
+    print 'Done!'
