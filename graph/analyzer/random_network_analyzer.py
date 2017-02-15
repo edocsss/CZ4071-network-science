@@ -1,10 +1,6 @@
-from scipy.misc import factorial, comb
-import graph_tool as gt
 import math
-import subprocess
+from scipy.misc import factorial, comb
 import numpy as np
-import config as CONFIG
-import os
 
 
 def calculate_average_degree(n, p=0.05):
@@ -16,7 +12,7 @@ def calculate_average_distance(n, p=0.05):
     return math.log(n) / math.log(avg_degree)
 
 
-def calculate_clustering_coefficient(n, p=0.05):
+def calculate_clustering_coefficient(p=0.05):
     return p
 
 
@@ -44,26 +40,3 @@ def get_regime_type(n, p=0.05):
         return 'connected'
     elif avg_degree > 1:
         return 'supercritical'
-
-
-def generate_random_network(n, p=0.05):
-    subprocess.Popen(["./random_graph_generator", str(n), str(p)], stdout=subprocess.PIPE).communicate()[0].decode().strip()
-    temp_file_path = os.path.join(CONFIG.GRAPH_DIR_PATH, 'util', 'temp.csv')
-
-    f = open(temp_file_path, 'r')
-    random_network = gt.load_graph_from_csv(file_name=f, directed=False, csv_options={'delimiter': '\t'})
-    f.close()
-
-    os.remove(temp_file_path)
-    return random_network
-
-
-if __name__ == '__main__':
-    from graph.util import network_util
-    import time
-
-    network = generate_random_network(10000, 0.5)
-    print 'start'
-    start = time.time()
-    print network_util.instant_shortest_distance(network, n_process=4)
-    print time.time() - start

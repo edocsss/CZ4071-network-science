@@ -1,10 +1,12 @@
-from graph.util import data_util
-import config as CONFIG
-import os
-from graph_tool import topology
-import numpy as np
-from multiprocessing import Process
 import cPickle
+import os
+from multiprocessing import Process
+
+import numpy as np
+from graph_tool import topology
+
+from graph.generator import random_network_generator
+import config as CONFIG
 
 
 def _save_object(file_path, obj):
@@ -25,7 +27,11 @@ def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
     vertices = list(network.vertices())
     l = len(vertices)
 
-    file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'shortest_distance_result_{}.pkl'.format(process_id))
+    file_path = os.path.join(
+        CONFIG.RESULTS_DIR_PATH,
+        'shortest_distance_result_{}.pkl'.format(process_id)
+    )
+
     distance_distribution = {}
     _save_object(file_path, distance_distribution)
 
@@ -33,11 +39,17 @@ def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
         distance_distribution = _load_object(file_path)
         v = vertices[i]
 
-        distance_map = topology.shortest_distance(network, source=v, target=None, directed=False)
-        distance_array = distance_map.get_array()
+        distance_map = topology.shortest_distance(
+            network,
+            source=v,
+            target=None,
+            directed=False
+        )
 
+        distance_array = distance_map.get_array()[int(v):]
         for j in np.nditer(distance_array):
             distance = int(j)
+
             if distance not in distance_distribution:
                 distance_distribution[distance] = 0
 
@@ -49,7 +61,11 @@ def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
 def analyze_shortest_distance(network, n_process=16):
     processes = []
     for i in range(n_process):
-        p = Process(target=_shortest_distance_runner_huge_network, args=(network, i, n_process,))
+        p = Process(
+            target=_shortest_distance_runner_huge_network,
+            args=(network, i, n_process,)
+        )
+
         print 'Starting process ID:', i
         p.start()
         processes.append(p)
@@ -61,6 +77,10 @@ def analyze_shortest_distance(network, n_process=16):
     print 'Done!'
 
 
+def main():
+    network = random_network_generator.generate_random_network(1000, p=0.35)
+    analyze_shortest_distance(network, n_process=4)
+
+
 if __name__ == '__main__':
-    network = data_util.get_network()
-    analyze_shortest_distance(network, n_process=1)
+    main()

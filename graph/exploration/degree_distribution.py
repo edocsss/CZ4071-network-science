@@ -6,14 +6,14 @@ import matplotlib.pyplot as plt
 
 import config as CONFIG
 from graph.util import data_util, plot_util
-from graph.util import network_util
+from graph.analyzer import degree_analyzer
 
 
-def plot_degree_distribution(degree_distribution, plot_loglog=False):
+def plot_degree_distribution(deg_dist, plot_loglog=False):
     x = []
     y = []
 
-    for k, v in degree_distribution.items():
+    for k, v in deg_dist.items():
         x.append(k)
         y.append(v)
 
@@ -23,11 +23,18 @@ def plot_degree_distribution(degree_distribution, plot_loglog=False):
         _show_usual_plot(x, y)
 
 
-def plot_log_binned_degree_distribution(degree_count):
-    n, bins = plot_util.log_binning(degree_count, n_bins=50, plot=True)
+def plot_log_binned_degree_distribution(deg_count):
+    n, bins = plot_util.log_binning(deg_count, n_bins=50, plot=True)
     bin_centers = list((bins[1:] + bins[:-1]) / 2)
     n = list(n)
-    plot_util.plot_scatter(bin_centers, n, title='Log-Log Degree Distribution', x_label='k', y_label='P(k)', log_log=True)
+    plot_util.plot_scatter(
+        bin_centers,
+        n,
+        title='Log-Log Degree Distribution',
+        x_label='k',
+        y_label='P(k)',
+        log_log=True
+    )
 
 
 def _show_loglog_plot(x, y):
@@ -48,18 +55,22 @@ def _store_dict_to_json(d, file_name):
     f.close()
 
 
-if __name__ == '__main__':
+def main():
     network = data_util.get_network()
-    degree_count = network_util.count_degree(network)
+    degree_count = degree_analyzer.count_degree(network)
     _store_dict_to_json(degree_count, 'degree_count.json')
 
-    degree_distribution = network_util.analyze_degree_distribution(degree_count)
+    degree_distribution = degree_analyzer.analyze_degree_distribution(degree_count)
     _store_dict_to_json(degree_distribution, 'degree_distribution.json')
 
-    first_moment = network_util.calculate_moment(degree_count, n=1)
-    second_moment = network_util.calculate_moment(degree_count, n=2)
+    first_moment = degree_analyzer.calculate_degree_moment(degree_count, n=1)
+    second_moment = degree_analyzer.calculate_degree_moment(degree_count, n=2)
     print('First Moment:', first_moment)
     print('Second Moment:', second_moment)
 
     plot_degree_distribution(degree_distribution, plot_loglog=False)
     plot_log_binned_degree_distribution(degree_count)
+
+
+if __name__ == '__main__':
+    main()

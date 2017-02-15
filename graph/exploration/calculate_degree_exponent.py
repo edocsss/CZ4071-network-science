@@ -1,9 +1,14 @@
-from graph.util import data_util, network_util
+from graph.analyzer import degree_analyzer, scale_free_network_analyzer
+from graph.util import data_util
+
+
+def main():
+    network = data_util.get_network()
+    degree_count = degree_analyzer.count_degree(network)
+
+    degree_exponent = scale_free_network_analyzer.calculate_degree_exponent(degree_count)
+    print 'Degree Exponent (gamma):', degree_exponent
 
 
 if __name__ == '__main__':
-    network = data_util.get_network()
-    degree_count = network_util.count_degree(network)
-
-    degree_exponent = network_util.calculate_degree_exponent(degree_count)
-    print 'Degree Exponent (gamma):', degree_exponent
+    main()
