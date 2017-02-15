@@ -23,7 +23,7 @@ def _compute_random_network_properties(n, p):
 
     # Calculated using random network theory
     average_degree = random_network_analyzer.calculate_average_degree(n)
-    degree_distribution = random_network_analyzer.get_degree_distribution(n)
+    degree_distribution = random_network_analyzer.calculate_degree_prob_distribution(n)
     regime_type = random_network_analyzer.get_regime_type(n)
 
     average_distance = random_network_analyzer.calculate_average_distance(n)

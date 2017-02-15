@@ -1,11 +1,13 @@
 import cPickle
 import os
 from multiprocessing import Process
+import time
 
 import numpy as np
 from graph_tool import topology
 
 from graph.generator import random_network_generator
+from graph.util import data_util
 import config as CONFIG
 
 
@@ -36,20 +38,13 @@ def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
     _save_object(file_path, distance_distribution)
 
     for i in range(process_id, l, n_process):
-        distance_distribution = _load_object(file_path)
         v = vertices[i]
-
-        distance_map = topology.shortest_distance(
-            network,
-            source=v,
-            target=None,
-            directed=False
-        )
-
+        distance_map = topology.shortest_distance(network, source=v, target=None, directed=False)
+        distance_distribution = _load_object(file_path)
         distance_array = distance_map.get_array()[int(v):]
+
         for j in np.nditer(distance_array):
             distance = int(j)
-
             if distance not in distance_distribution:
                 distance_distribution[distance] = 0
 
@@ -78,8 +73,9 @@ def analyze_shortest_distance(network, n_process=16):
 
 
 def main():
-    network = random_network_generator.generate_random_network(1000, p=0.35)
-    analyze_shortest_distance(network, n_process=4)
+    # network = random_network_generator.generate_random_network(1000, p=0.35)
+    network = data_util.get_network()
+    analyze_shortest_distance(network, n_process=1)
 
 
 if __name__ == '__main__':

@@ -28,11 +28,11 @@ def get_log_log_points(x_orig, y_orig):
     return x_log, y_log
 
 
-def plot_scatter(x, y, title='', x_label='', y_label='', log_log=False):
+def plot_scatter(x, y, s=20*0.1, c='r', title='', x_label='', y_label='', log_log=False):
     if log_log:
         x, y = get_log_log_points(x, y)
 
-    plt.scatter(x, y, s=20*0.1)
+    plt.scatter(x, y, s=s, c=c)
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)

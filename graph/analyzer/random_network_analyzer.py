@@ -16,7 +16,7 @@ def calculate_clustering_coefficient(p=0.05):
     return p
 
 
-def get_degree_distribution(n, p=0.05):
+def calculate_degree_prob_distribution(n, p=0.05):
     avg_degree = calculate_average_degree(n, p)
 
     def _calculate_poisson_prob(k):

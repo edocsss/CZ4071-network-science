@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 
 
-def calculate_degree_exponent(degree_count, plot=False):
+def calculate_real_degree_exponent(degree_count, plot=False):
     n, bins = plot_util.log_binning(degree_count, n_bins=50)
     bin_centers = list((bins[1:] + bins[:-1]) / 2)
     n = list(n)
@@ -26,4 +26,25 @@ def calculate_degree_exponent(degree_count, plot=False):
             log_log=True
         )
 
-    return slope
+    return -slope
+
+
+def calculate_expected_max_degree(n, min_degree, degree_exponent):
+    return min_degree * math.pow(n, 1 / (degree_exponent - 1))
+
+
+def calculate_expected_average_distance(no_of_nodes, degree_exponent):
+    if degree_exponent < 2:
+        raise Exception('It is impossible to have degree exponent smaller than 2!')
+    elif degree_exponent == 2:
+        return 'It\'s a constant'
+    elif 2 < degree_exponent < 3:
+        return math.log(math.log(no_of_nodes)) / math.log(degree_exponent - 1)
+    elif degree_exponent == 3:
+        return math.log(no_of_nodes) / math.log(math.log(no_of_nodes))
+    else:
+        return math.log(no_of_nodes)
+
+
+def calculate_expected_degree_exponent(no_of_nodes, kmax, kmin):
+    return (math.log(no_of_nodes) / math.log(kmax / kmin)) + 1
