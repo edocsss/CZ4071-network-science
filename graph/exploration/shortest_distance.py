@@ -4,8 +4,21 @@ import os
 from graph_tool import topology
 import numpy as np
 from multiprocessing import Process
-import gzip
 import cPickle
+
+
+def _save_object(file_path, obj):
+    f = open(file_path, 'wb')
+    cPickle.dump(obj, f)
+    f.close()
+
+
+def _load_object(file_path):
+    f = open(file_path, 'rb')
+    obj = cPickle.load(f)
+    f.close()
+
+    return obj
 
 
 def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
@@ -14,9 +27,12 @@ def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
 
     file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'shortest_distance_result_{}.pkl'.format(process_id))
     distance_distribution = {}
+    _save_object(file_path, distance_distribution)
 
     for i in range(process_id, l, n_process):
+        distance_distribution = _load_object(file_path)
         v = vertices[i]
+
         distance_map = topology.shortest_distance(network, source=v, target=None, directed=False)
         distance_array = distance_map.get_array()
 
@@ -27,9 +43,7 @@ def _shortest_distance_runner_huge_network(network, process_id, n_process=16):
 
             distance_distribution[distance] += 1
 
-    f = gzip.GzipFile(file_path, 'wb')
-    cPickle.dump(distance_distribution, f, cPickle.HIGHEST_PROTOCOL)
-    f.close()
+        _save_object(file_path, distance_distribution)
 
 
 def analyze_shortest_distance(network, n_process=16):
