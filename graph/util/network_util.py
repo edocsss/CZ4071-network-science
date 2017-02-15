@@ -3,7 +3,28 @@ import os
 import numpy as np
 from graph_tool import clustering, topology
 import config as CONFIG
-import threading
+from multiprocessing import Process
+from graph.util import plot_util
+from scipy.stats import linregress
+import matplotlib.pyplot as plt
+import logging
+import cPickle
+import gzip
+logger = logging.getLogger(__name__)
+
+
+def save(obj, file_path):
+    f = gzip.GzipFile(file_path, 'wb')
+    cPickle.dump(obj, f, cPickle.HIGHEST_PROTOCOL)
+    f.close()
+
+
+def load(file_path):
+    f = gzip.GzipFile(file_path, 'rb')
+    obj = cPickle.load(f)
+    f.close()
+
+    return obj
 
 
 def count_degree(network):
@@ -44,39 +65,51 @@ def calculate_average_clustering_coefficient(network):
     return np.sum(coeffs) / len(coeffs)
 
 
-def _shortest_distance_runner(network, thread_id, n_threads=16):
+def calculate_degree_exponent(degree_count, plot=False):
+    n, bins = plot_util.log_binning(degree_count, n_bins=50)
+    bin_centers = list((bins[1:] + bins[:-1]) / 2)
+    n = list(n)
+
+    x_log, y_log = plot_util.get_log_log_points(bin_centers, n)
+    slope, intercept, _, _, _ = linregress(x_log, y_log)
+
+    xl = [math.log10(i) for i in range(1, 10000)]
+    yl = [slope * math.log10(i) + intercept for i in range(1, 10000)]
+
+    if plot:
+        plt.plot(xl, yl, 'r')
+        plot_util.plot_scatter(bin_centers, n, title='Log-Log Degree Distribution', x_label='k', y_label='P(k)',
+                               log_log=True)
+
+    return slope
+
+
+def _shortest_distance_runner_small_network(network, thread_id, n_threads=8):
     vertices = list(network.vertices())
     l = len(vertices)
-
-    file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'shortest_distance_result_{}.tsv'.format(thread_id))
-    f = open(file_path, 'w')
-    f.close()
 
     for i in range(thread_id, l, n_threads):
         v = vertices[i]
         v_id = int(v)
+
         distance_map = topology.shortest_distance(network, source=v, target=None, directed=False)
-
-        f = open(file_path, 'a')
-        f.write('{}'.format(v_id))
-
-        for p in distance_map.get_array():
-            f.write('\t{}'.format(p))
-
-        f.write('\n')
-        f.close()
+        distance_array = distance_map.get_array()
 
 
-def analyze_shortest_distance(network, n_threads=16):
-    threads = []
-    for i in range(n_threads):
-        t = threading.Thread(target=_shortest_distance_runner, args=(network, i, n_threads,))
-        print 'Starting thread id:', i
-        t.start()
-        threads.append(t)
+def instant_shortest_distance(network, n_process=4):
+    n_nodes = network.num_vertices()
+    if n_nodes > 100000:
+        return None
 
-    print 'Threads created!'
-    for thread in threads:
-        thread.join()
+    processes = []
+    for i in range(n_process):
+        p = Process(target=_shortest_distance_runner_small_network, args=(network, i, n_process,))
+        print 'Starting process ID:', i
+        p.start()
+        processes.append(p)
+
+    print 'Processes created!'
+    for p in processes:
+        p.join()
 
     print 'Done!'

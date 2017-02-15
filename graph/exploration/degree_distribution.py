@@ -24,7 +24,7 @@ def plot_degree_distribution(degree_distribution, plot_loglog=False):
 
 
 def plot_log_binned_degree_distribution(degree_count):
-    n, bins = plot_util.log_binning(degree_count, n_bins=50)
+    n, bins = plot_util.log_binning(degree_count, n_bins=50, plot=True)
     bin_centers = list((bins[1:] + bins[:-1]) / 2)
     n = list(n)
     plot_util.plot_scatter(bin_centers, n, title='Log-Log Degree Distribution', x_label='k', y_label='P(k)', log_log=True)

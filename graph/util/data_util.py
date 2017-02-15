@@ -5,6 +5,7 @@ from graph.util import network_util
 import cPickle
 import gc
 import time
+from graph_tool import topology
 
 
 def _read_network(file_name='raw.csv', replace_pickle=False):
@@ -45,15 +46,9 @@ def _load_network(file_name='raw.pkl'):
     f.close()
     return network
 
+
 def get_network():
     return _network
 
 
 _network = _read_network(file_name='raw.csv', replace_pickle=False)
-
-
-if __name__ == '__main__':
-    network = get_network()
-    start = time.time()
-    network_util.analyze_shortest_distance(network, n_threads=16)
-    print time.time() - start

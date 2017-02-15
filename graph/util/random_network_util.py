@@ -1,6 +1,5 @@
 from scipy.misc import factorial, comb
 import graph_tool as gt
-import graph_tool.topology as gtt
 import math
 import subprocess
 import numpy as np
@@ -57,3 +56,14 @@ def generate_random_network(n, p=0.05):
 
     os.remove(temp_file_path)
     return random_network
+
+
+if __name__ == '__main__':
+    from graph.util import network_util
+    import time
+
+    network = generate_random_network(10000, 0.5)
+    print 'start'
+    start = time.time()
+    print network_util.instant_shortest_distance(network, n_process=4)
+    print time.time() - start

@@ -3,14 +3,15 @@ import math
 import matplotlib.pyplot as plt
 
 
-def log_binning(counter_dict, n_bins=50):
+def log_binning(counter_dict, n_bins=50, plot=False):
     x = np.sort(counter_dict.values())
     log_bins = np.logspace(math.log10(min(x)), math.log10(max(x)), n_bins)
     n, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
 
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.show()
+    if plot:
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.show()
 
     return n, bins
 

@@ -44,6 +44,11 @@ def _compute_real_network_properties(network):
     global_clustering_coefficient = network_util.calculate_global_clustering_coefficient(network)
     average_clustering_coefficient = network_util.calculate_average_clustering_coefficient(network)
 
+    shortest_distance = network_util.instant_shortest_distance(network)
+    shortest_distance_distribution = None
+    average_degree = None
+    diameter = None
+
     return {
         'no_of_nodes': no_of_nodes,
         'no_of_edges': no_of_edges,
@@ -58,37 +63,14 @@ def _compute_real_network_properties(network):
     }
 
 
-# All formulas!
-def _compute_random_network_properties(network):
-    no_of_nodes = network.num_vertices()
-    no_of_edges = network.num_edges()
-
-    average_degree = random_network_util.calculate_average_degree(no_of_nodes)
-    degree_distribution = random_network_util.get_degree_distribution(no_of_nodes)
-    regime_type = random_network_util.get_regime_type(no_of_nodes)
-
-    average_distance = random_network_util.calculate_average_distance(no_of_nodes)
-    clustering_coefficient = random_network_util.calculate_clustering_coefficient(no_of_nodes)
-
-    return {
-        'no_of_nodes': no_of_nodes,
-        'no_of_edges': no_of_edges,
-        'degree_distribution': degree_distribution,
-        'average_degree': average_degree,
-        'regime_type': regime_type,
-        'average_distance': average_distance,
-        'clustering_coefficient': clustering_coefficient
-    }
-
-
 def _compute_scale_free_network_properties(network):
     pass
 
 
 def _store_graph_csv_to_file_system(graph_name, graph_csv):
-    f = open(os.path.join(CONFIG.DB_DIR_PATH, graph_name + '.csv'))
-    f.write(graph_csv)
-    f.close()
+    file = open(os.path.join(CONFIG.DB_DIR_PATH, graph_name + '.csv'))
+    file.write(graph_csv)
+    file.close()
 
 
 def _load_graph_csv_from_file_system(graph_name):
