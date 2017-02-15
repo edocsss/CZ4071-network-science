@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/edwin-candinegara/CZ4071-network-science#readme",
   "devDependencies": {
-    "@types/angular": "^1.6.5"
+    "@types/angular": "^1.6.5",
+    "@types/angular-material": "^1.1.45",
+    "@types/angular-ui-router": "^1.1.36"
   }
 }
