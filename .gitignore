@@ -89,8 +89,22 @@ ENV/
 .ropeproject
 
 
-
-
 .idea
 **/.DS_Store
 data
+
+# Angular
+*.swp
+/etc
+/node_modules/
+/jspm_packages/
+bower_components/
+
+/dist/
+/build/
+
+.vscode
+*.log
+*.stackdump
+npm-debug.log
+.settings/
