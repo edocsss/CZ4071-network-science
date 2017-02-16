@@ -96,15 +96,19 @@ data
 # Angular
 *.swp
 /etc
-/node_modules/
-/jspm_packages/
+node_modules/
+jspm_packages/
 bower_components/
 
-/dist/
-/build/
+dist/
+build/
 
 .vscode
 *.log
 *.stackdump
 npm-debug.log
 .settings/
+
+.vscode
+tags
+static/node_modules

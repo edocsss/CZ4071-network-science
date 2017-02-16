@@ -1,9 +1,8 @@
-import config as CONFIG
-import graph_tool as gt
 import os
-import graph_tool.clustering as gt_clustering
 import cPickle
 import gc
+import graph_tool as gt
+import config as CONFIG
 
 
 def _read_network(file_name='raw.csv', replace_pickle=False):
@@ -17,10 +16,15 @@ def _read_network(file_name='raw.csv', replace_pickle=False):
 
     f = open(file_path, 'r')
     print 'Loading graph from raw file...'
-    G = gt.load_graph_from_csv(file_name=f, directed=False, csv_options={'delimiter': '\t'})
+    G = gt.load_graph_from_csv(
+        file_name=f,
+        directed=False,
+        csv_options={'delimiter': '\t'}
+    )
+
     f.close()
 
-    print('storing graph...')
+    print 'storing graph...'
     _store_network(G, file_name=pickle_name)
 
     return G
@@ -44,13 +48,9 @@ def _load_network(file_name='raw.pkl'):
     f.close()
     return network
 
+
 def get_network():
     return _network
 
 
 _network = _read_network(file_name='raw.csv', replace_pickle=False)
-
-
-if __name__ == '__main__':
-    network = get_network()
-    lc = gt_clustering.local_clustering(network, undirected=True)

@@ -1,14 +1,15 @@
-from graph.util import network_util
+import os
 from flask import request, Blueprint
 import graph_tool as gt
+from graph.analyzer import degree_analyzer, distance_analyzer, scale_free_network_analyzer, clustering_coefficient_analyzer
+from graph.util import network_format_converter
 import config as CONFIG
-import os
 
 
 blueprint = Blueprint('graph_handler', __name__)
 
 
-@blueprint.route('/test', methods=['POST'])
+@blueprint.route('/network', methods=['POST'])
 def handle_graph():
     json = request.get_json()
     graph_csv = json['graphCsv']
@@ -23,47 +24,58 @@ def handle_graph():
 def _compute_graph_properties(graph_name):
     network = _load_graph_csv_from_file_system(graph_name)
     result = {
-        'real_network_properties': _compute_real_network_properties(network),
-        'random_network_properties': _compute_random_network_properties(network),
-        'scale_free_network_properties': _compute_scale_free_network_properties(network)
+        'gui_network_format': network_format_converter.convert_gt_network_to_gui_format(network),
+        'network_properties': _compute_network_properties(network)
     }
 
     return result
 
 
-def _compute_real_network_properties(network):
+def _compute_network_properties(network):
     no_of_nodes = network.num_vertices()
     no_of_edges = network.num_edges()
 
-    degree_count = network_util.count_degree(network)
-    degree_distribution = network_util.analyze_degree_distribution(degree_count)
+    # Real Network Properties
+    degree_count = degree_analyzer.count_degree(network)
+    degree_distribution = degree_analyzer.calculate_degree_distribution(degree_count)
+    degree_prob_distribution = degree_analyzer.calculate_degree_prob_distribution(no_of_nodes, degree_distribution)
+    average_degree = degree_analyzer.calculate_degree_moment(degree_count, n=1)
+    degree_second_moment = degree_analyzer.calculate_degree_moment(degree_count, n=2)
+    real_kmax = degree_analyzer.find_largest_degree(degree_distribution)
+    real_kmin = degree_analyzer.find_smallest_degree(degree_distribution)
 
-    average_degree = network_util.calculate_moment(degree_count, n=1)
-    degree_second_moment = network_util.calculate_moment(degree_count, n=2)
+    global_clustering_coefficient = clustering_coefficient_analyzer.calculate_global_clustering_coefficient(network)
+    average_clustering_coefficient = clustering_coefficient_analyzer.calculate_average_clustering_coefficient(network)
 
-    global_clustering_coefficient = network_util.calculate_global_clustering_coefficient(network)
-    average_clustering_coefficient = network_util.calculate_average_clustering_coefficient(network)
+    distance_distribution = distance_analyzer.get_distance_distribution(network)
+    distance_prob_distribution = distance_analyzer.calculate_distance_prob_distribution(distance_distribution)
+    average_distance = distance_analyzer.calculate_average_distance(no_of_nodes, distance_distribution)
+    diameter = distance_analyzer.find_network_diameter(distance_distribution)
+
+    degree_exponent = scale_free_network_analyzer.calculate_real_degree_exponent(degree_count)
+
+
+    # Scale Free Theoretical Value
+    expected_kmax = scale_free_network_analyzer.calculate_expected_max_degree(no_of_nodes, real_kmin, degree_exponent)
+    expected_average_distance = scale_free_network_analyzer.calculate_expected_average_distance(no_of_nodes, degree_exponent)
+    expected_degree_exponent = scale_free_network_analyzer.calculate_expected_degree_exponent(no_of_nodes, real_kmax, real_kmin)
 
     return {
         'no_of_nodes': no_of_nodes,
         'no_of_edges': no_of_edges,
-        'degree_distribution': degree_distribution,
+        'degree_prob_distribution': degree_prob_distribution,
         'average_degree': average_degree,
         'degree_second_moment': degree_second_moment,
-        'shortest_path_distribution': None,
-        'average_path_distance': None,
-        'diameter': None,
+        'shortest_distance_prob_distribution': distance_prob_distribution,
+        'average_distance': average_distance,
+        'diameter': diameter,
         'global_clustering_coefficient': global_clustering_coefficient,
         'average_clustering_coefficient': average_clustering_coefficient,
+        'degree_exponent': degree_exponent,
+        'expected_kmax': expected_kmax,
+        'expected_average_distance': expected_average_distance,
+        'expected_degree_exponent': expected_degree_exponent
     }
-
-
-def _compute_random_network_properties(network):
-    pass
-
-
-def _compute_scale_free_network_properties(network):
-    pass
 
 
 def _store_graph_csv_to_file_system(graph_name, graph_csv):
