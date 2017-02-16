@@ -3,6 +3,10 @@ from scipy.misc import factorial, comb
 import numpy as np
 
 
+def calculate_no_of_edges(n, p):
+    return p * (n * (n - 1) / 2)
+
+
 def calculate_average_degree(n, p=0.05):
     return p * (n - 1)
 

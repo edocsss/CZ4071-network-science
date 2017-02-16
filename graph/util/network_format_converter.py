@@ -1,5 +1,7 @@
 import math
-from graph_tool.draw import sfdp_layout
+import os
+from graph_tool.draw import sfdp_layout, graph_draw
+import config as CONFIG
 
 
 def _scale_node_degree(k, kmax, kmin):
@@ -9,11 +11,12 @@ def _scale_node_degree(k, kmax, kmin):
 
     return math.pow(temp, 2)
 
+
 def _get_sfdp_layout(network):
     return sfdp_layout(network)
 
 
-def convert_gt_network_to_gui_format(network, kmax, kmin):
+def _convert_network_to_json_format(network, kmax, kmin):
     result = {
         'nodes': [],
         'edges': []
@@ -40,3 +43,19 @@ def convert_gt_network_to_gui_format(network, kmax, kmin):
         })
 
     return result
+
+
+def _plot_network_and_save_as_image(network, network_name):
+    file_name = network_name + '.png'
+    file_path = os.path.join(CONFIG.DB_PLOT_DIR_PATH, file_name)
+
+    layout = _get_sfdp_layout(network)
+    graph_draw(network, pos=layout, output=file_path)
+    return file_name
+
+
+def convert_gt_network_to_gui_format(network, network_name, kmax, kmin, use_image=False):
+    if use_image:
+        return _convert_network_to_json_format(network, kmax, kmin)
+    else:
+        return _plot_network_and_save_as_image(network, network_name)
