@@ -1,5 +1,4 @@
 import angular from 'angular';
-
 import 'angular-animate';
 import 'angular-aria';
 import 'angular-material';
@@ -7,10 +6,9 @@ import 'angular-messages';
 import 'angular-nvd3';
 import 'ng-file-upload';
 
-import AppController from 'src/AppController';
-import FormController from 'src/FormController';
-import GraphVisualizationController from 'src/GraphVisualizationController';
-import GraphPropertyController from 'src/GraphPropertyController';
+import FormController from './controllers/FormController';
+import GraphVisualizationController from './controllers/GraphVisualizationController';
+import GraphPropertyController from './controllers/GraphPropertyController';
 
 export default angular.module('graph-gui', ['ngMaterial', 'nvd3', 'ngFileUpload', 'ngMessages'])
     .config(function($mdThemingProvider) {
@@ -19,7 +17,6 @@ export default angular.module('graph-gui', ['ngMaterial', 'nvd3', 'ngFileUpload'
             .accentPalette('pink');
 
     })
-    .controller('AppController', AppController)
     .controller('GraphVisualizationController', GraphVisualizationController)
     .controller('GraphPropertyController', GraphPropertyController)
     .controller('FormController', FormController);

@@ -12,8 +12,8 @@ def convert_gt_network_to_gui_format(network):
 
     for e in network.edges():
         result['links'].append({
-            'source': e.source(),
-            'target': e.target()
+            'source': int(e.source()),
+            'target': int(e.target())
         })
 
     return result

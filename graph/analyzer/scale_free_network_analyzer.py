@@ -35,7 +35,7 @@ def calculate_expected_max_degree(n, min_degree, degree_exponent):
 
 def calculate_expected_average_distance(no_of_nodes, degree_exponent):
     if degree_exponent < 2:
-        raise Exception('It is impossible to have degree exponent smaller than 2!')
+        return 'N/A'
     elif degree_exponent == 2:
         return 'It\'s a constant'
     elif 2 < degree_exponent < 3:

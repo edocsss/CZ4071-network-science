@@ -6,7 +6,7 @@ from graph.generator import random_network_generator
 blueprint = Blueprint('random_network_handler', __name__)
 
 
-@blueprint.route('/random', methods=['POST'])
+@blueprint.route('/api/random_network', methods=['POST'])
 def handle_random_network():
     json = request.get_json()
     n = json['n']
@@ -17,6 +17,9 @@ def handle_random_network():
 
 
 def _compute_random_network_properties(n, p):
+    if p < 0 or p > 1:
+        return None
+
     # Real random network
     network = random_network_generator.generate_random_network(n, p)
     no_of_edges = network.num_edges()
@@ -39,3 +42,8 @@ def _compute_random_network_properties(n, p):
         'average_distance': average_distance,
         'clustering_coefficient': clustering_coefficient
     }
+
+
+if __name__ == '__main__':
+    import pprint
+    pprint.pprint(_compute_random_network_properties(1000, 0.5))

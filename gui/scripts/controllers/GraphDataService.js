@@ -4,7 +4,7 @@ function GraphDataService($q) {
         loadGraph: function() {
             // return $q.when(graph); // callback
         }
-    }
+    };
 }
 
 export default ['$q', GraphDataService];

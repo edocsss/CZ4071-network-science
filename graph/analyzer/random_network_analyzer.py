@@ -20,14 +20,18 @@ def calculate_degree_prob_distribution(n, p=0.05):
     avg_degree = calculate_average_degree(n, p)
 
     def _calculate_poisson_prob(k):
-        return math.pow(math.e, -avg_degree) * (math.pow(avg_degree, k) / factorial(k))
+        return {
+            k: math.pow(math.e, -avg_degree) * (math.pow(avg_degree, k) / factorial(k))
+        }
 
     def _calculate_binomial_prob(k):
-        return comb(n - 1, k) * math.pow(p, k) * math.pow(1 - p, n - 1 - k)
+        return {
+            k: comb(n - 1, k) * math.pow(p, k) * math.pow(1 - p, n - 1 - k)
+        }
 
-    k_values = np.array([k for k in range(2 * avg_degree)])
+    k_values = [k for k in range(2 * int(avg_degree))]
     prob_func = _calculate_poisson_prob if n >= 1000 else _calculate_binomial_prob
-    return np.apply_along_axis(func1d=prob_func, axis=0, arr=k_values).tolist()
+    return map(prob_func, k_values)
 
 
 def get_regime_type(n, p=0.05):

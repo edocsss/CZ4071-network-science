@@ -20,5 +20,8 @@
   "scripts": {
     "postinstall": "jspm install",
     "serve": "live-server ."
+  },
+  "devDependencies": {
+    "jspm": "^0.16.52"
   }
 }

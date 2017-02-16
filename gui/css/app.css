@@ -1,0 +1,24 @@
+md-toolbar h1 {
+    color: white;
+}
+
+.plot img {
+    width: 80%;
+    height: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.margin-left-zero {
+    margin-left: 0 !important;
+}
+
+div.md-errors-spacer {
+    display: none;
+}
+
+button.full-width {
+    width: 100%;
+}
