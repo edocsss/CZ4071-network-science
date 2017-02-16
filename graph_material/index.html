@@ -29,7 +29,7 @@
                 <md-content class="md-padding ">
                     <div layout="row" layout-sm="column">
                         <!-- Network Graph Visuals -->
-                        <div flex="75" ng-controller="GraphController" layout="row" layout-margin layout-padding>
+                        <div flex="75" ng-controller="GraphVisualizationController" layout="row" layout-margin layout-padding>
                             <nvd3 options="options" data="data"></nvd3>
                         </div>
 
@@ -84,7 +84,7 @@
         <md-tab id="graph-properties">
             <md-tab-label>Graph Properties</md-tab-label>
             <md-tab-body>
-                <md-content class="md-padding " ng-controller="GraphController">
+                <md-content class="md-padding " ng-controller="GraphPropertyController">
                     <div layout="row" layout-sm="column">
                         <!-- Plotted Properties -->
                         <div flex="75" layout="row" layout-fill layout-padding layout-margin>
