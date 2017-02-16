@@ -25,12 +25,14 @@
     <md-content class="md-padding ">
         <div layout="row" layout-sm="column">
             <!-- Network Graph Visuals -->
-            <div flex="80" ng-controller="GraphVisualizationController" layout="row" layout-margin layout-padding>
-                <nvd3 options="options" data="data"></nvd3>
+            <div flex="80" ng-controller="GraphVisualizationController" layout="row" layout-align="center center" layout-margin layout-padding id="graph-visualization-container">
+                <h2 ng-show="!graphData()">No Graph Data Available!</h2>
+                {{ graphData().guiNetworkFormat }}
+                <nvd3 ng-show="graphData()" options="options" style="width: 100%" data="graphData"></nvd3>
             </div>
 
             <!--Generate Graph Options-->
-            <div flex>
+            <div flex="20">
                 <md-card>
                     <md-card-title>
                         <md-card-title-text>
@@ -48,7 +50,7 @@
                         <div layout="column" flex style="margin-top: 2em;">
                             <span class="md-subhead">Generate Random Graph</span>
                             <form name="graphOptionForm" ng-controller="FormController">
-                                <!--<md-input-container class="md-block">
+                                <md-input-container class="md-block">
                                     <label>Number of Nodes (N)</label>
                                     <input name="numberOfNodes" ng-change="change()" ng-model="graphOptions.numberOfNodes" type="number" max=1000 min=0 required>
                                     <div ng-messages="graphOptionForm.numberOfNodes.$error" role="alert" md-auto-hide="true">
@@ -56,7 +58,7 @@
                                         <div ng-message="min, max" class="form-message">That doesn't look like a valid number of nodes.
                                         </div>
                                     </div>
-                                </md-input-container>-->
+                                </md-input-container>
                                 <md-input-container class="md-block">
                                     <label>Proability Distribution (p)</label>
                                     <input name="probability" min=0 max=1 ng-change="change()" type="number" step=0.05 ng-model="graphOptions.probability" required>

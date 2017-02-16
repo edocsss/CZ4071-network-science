@@ -12,6 +12,9 @@ def calculate_real_degree_exponent(degree_count, plot=False):
     x_log, y_log = plot_util.get_log_log_points(bin_centers, n)
     slope, intercept, _, _, _ = linregress(x_log, y_log)
 
+    if math.isnan(slope):
+        return None
+
     xl = [math.log10(i) for i in range(1, 10000)]
     yl = [slope * math.log10(i) + intercept for i in range(1, 10000)]
 
@@ -30,12 +33,15 @@ def calculate_real_degree_exponent(degree_count, plot=False):
 
 
 def calculate_expected_max_degree(n, min_degree, degree_exponent):
+    if degree_exponent is None:
+        return None
+
     return min_degree * math.pow(n, 1 / (degree_exponent - 1))
 
 
 def calculate_expected_average_distance(no_of_nodes, degree_exponent):
-    if degree_exponent < 2:
-        return 'N/A'
+    if degree_exponent is None or degree_exponent < 2:
+        return None
     elif degree_exponent == 2:
         return 'It\'s a constant'
     elif 2 < degree_exponent < 3:
@@ -47,4 +53,8 @@ def calculate_expected_average_distance(no_of_nodes, degree_exponent):
 
 
 def calculate_expected_degree_exponent(no_of_nodes, kmax, kmin):
-    return (math.log(no_of_nodes) / math.log(kmax / kmin)) + 1
+    try:
+        return (math.log(no_of_nodes) / math.log(kmax / kmin)) + 1
+
+    except ZeroDivisionError:
+        return None

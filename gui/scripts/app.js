@@ -9,6 +9,8 @@ import 'ng-file-upload';
 import FormController from './controllers/FormController';
 import GraphVisualizationController from './controllers/GraphVisualizationController';
 import GraphPropertyController from './controllers/GraphPropertyController';
+import GraphDataFactory from './factories/GraphDataFactory';
+import URL from './constants/URL';
 
 export default angular.module('graph-gui', ['ngMaterial', 'nvd3', 'ngFileUpload', 'ngMessages'])
     .config(function($mdThemingProvider) {
@@ -19,4 +21,6 @@ export default angular.module('graph-gui', ['ngMaterial', 'nvd3', 'ngFileUpload'
     })
     .controller('GraphVisualizationController', GraphVisualizationController)
     .controller('GraphPropertyController', GraphPropertyController)
-    .controller('FormController', FormController);
+    .controller('FormController', FormController)
+    .factory('GraphDataFactory', GraphDataFactory)
+    .constant('URL', URL);

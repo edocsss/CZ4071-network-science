@@ -1,5 +1,5 @@
 import os
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 import graph_tool as gt
 from graph.analyzer import degree_analyzer, distance_analyzer, scale_free_network_analyzer, clustering_coefficient_analyzer
 from graph.util import network_format_converter
@@ -18,16 +18,21 @@ def handle_graph():
     # graph_csv is the CSV text!
     _store_graph_csv_to_file_system(graph_name, graph_csv)
     result = _compute_graph_properties(graph_name)
-    print result
-    return
-    return result
+    return jsonify(result)
+
+
+@blueprint.route('/api/network', methods=['GET'])
+def handle_example_graph():
+    graph_name = 'sample_network'
+    result = _compute_graph_properties(graph_name)
+    return jsonify(result)
 
 
 def _compute_graph_properties(graph_name):
     network = _load_graph_csv_from_file_system(graph_name)
     result = {
-        'gui_network_format': network_format_converter.convert_gt_network_to_gui_format(network),
-        'network_properties': _compute_network_properties(network)
+        'guiNetworkFormat': network_format_converter.convert_gt_network_to_gui_format(network),
+        'networkProperties': _compute_network_properties(network)
     }
 
     return result
@@ -74,6 +79,7 @@ def _compute_network_properties(network):
         'global_clustering_coefficient': global_clustering_coefficient,
         'average_clustering_coefficient': average_clustering_coefficient,
         'degree_exponent': degree_exponent,
+
         'expected_kmax': expected_kmax,
         'expected_average_distance': expected_average_distance,
         'expected_degree_exponent': expected_degree_exponent

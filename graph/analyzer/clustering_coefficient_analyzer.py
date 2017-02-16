@@ -10,4 +10,4 @@ def calculate_global_clustering_coefficient(network):
 def calculate_average_clustering_coefficient(network):
     lc = clustering.local_clustering(network, undirected=True)
     coeffs = lc.get_array()
-    return np.sum(coeffs) / len(coeffs)
+    return float(np.sum(coeffs) / len(coeffs))
