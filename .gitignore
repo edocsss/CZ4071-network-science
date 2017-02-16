@@ -109,6 +109,5 @@ build/
 npm-debug.log
 .settings/
 
-.vscode
 tags
 static/node_modules
