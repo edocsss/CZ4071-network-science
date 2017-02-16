@@ -1,28 +1,47 @@
-function GraphVisualizationController($scope, GraphDataFactory) {
-    $scope.options = {
-        chart: {
-            type: 'forceDirectedGraph',
-            margin: {
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20
-            },
-            color: function (d) {
-                return 1;
-            },
-            noData: ''
-        },
-        styles: {
-            css: {
-                width: '100%',
-                height: '100%'
-            }
-        }
-    };
+function GraphVisualizationController($scope, $timeout, GraphDataFactory, EVENTS) {
+    let s;
+    let g = new sigma.classes.graph();
 
-    $scope.graphData = GraphDataFactory.getGraphGuiFormat;
     GraphDataFactory.getExampleGraphData();
+    $scope.$on(EVENTS.NEW_GRAPH_DATA, function () {
+        $scope.graphData = GraphDataFactory.getGraphGuiFormat();
+        drawGraph();
+    });
+
+    function drawGraph() {
+        g.clear();
+        g.read($scope.graphData);
+
+        if (s) s.kill();
+        s = new sigma({
+            graph: GraphDataFactory.getGraphGuiFormat(),
+            container: 'graph-container',
+            settings: {
+                defaultEdgeType: 'curve',
+                defaultLabelColor: '#fff',
+			    defaultLabelSize: 14,
+			    defaultLabelBGColor: '#fff',
+			    defaultLabelHoverColor: '#000',
+			    labelThreshold: 6,
+                minNodeSize: 0,
+			    maxNodeSize: 10,
+			    minEdgeSize: 0,
+			    maxEdgeSize: 10,
+                hideEdgesOnMove: true
+            }
+        });
+
+        s.render();
+        s.startForceAtlas2({
+            worker: true,
+            adjustSizes: true,
+            barnesHutTheta: 1
+        });
+
+        $timeout(() => {
+            s.stopForceAtlas2();
+        }, 0);
+    }
 }
 
-export default ['$scope', 'GraphDataFactory', GraphVisualizationController];
+export default ['$scope', '$timeout', 'GraphDataFactory', 'EVENTS', GraphVisualizationController];

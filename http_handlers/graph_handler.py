@@ -11,31 +11,35 @@ blueprint = Blueprint('graph_handler', __name__)
 
 @blueprint.route('/api/network', methods=['POST'])
 def handle_graph():
-    file = request.files['file']
-    graph_name = file.filename.split('.')[0]
-    graph_csv = file.read()
+    f = request.files['file']
+    graph_name = f.filename.split('.')[0]
+    graph_csv = f.read()
 
-    # graph_csv is the CSV text!
     _store_graph_csv_to_file_system(graph_name, graph_csv)
-    result = _compute_graph_properties(graph_name)
+    result = _analyze_properties(graph_name)
     return jsonify(result)
 
 
 @blueprint.route('/api/network', methods=['GET'])
 def handle_example_graph():
-    graph_name = 'sample_network'
-    result = _compute_graph_properties(graph_name)
+    graph_name = 'sample_network_2'
+    result = _analyze_properties(graph_name)
     return jsonify(result)
 
 
-def _compute_graph_properties(graph_name):
+def _analyze_properties(graph_name):
     network = _load_graph_csv_from_file_system(graph_name)
-    result = {
-        'guiNetworkFormat': network_format_converter.convert_gt_network_to_gui_format(network),
-        'networkProperties': _compute_network_properties(network)
-    }
+    network_properties = _compute_network_properties(network)
+    gui_network_format = network_format_converter.convert_gt_network_to_gui_format(
+        network,
+        network_properties['real_kmax'],
+        network_properties['real_kmin']
+    )
 
-    return result
+    return {
+        'guiNetworkFormat': gui_network_format,
+        'networkProperties': network_properties
+    }
 
 
 def _compute_network_properties(network):
@@ -73,6 +77,8 @@ def _compute_network_properties(network):
         'degree_prob_distribution': degree_prob_distribution,
         'average_degree': average_degree,
         'degree_second_moment': degree_second_moment,
+        'real_kmax': real_kmax,
+        'real_kmin': real_kmin,
         'shortest_distance_prob_distribution': distance_prob_distribution,
         'average_distance': average_distance,
         'diameter': diameter,
@@ -87,18 +93,14 @@ def _compute_network_properties(network):
 
 
 def _store_graph_csv_to_file_system(graph_name, graph_csv):
-    f = open(os.path.join(CONFIG.DB_DIR_PATH, graph_name + '.csv'), 'w')
+    f = open(os.path.join(CONFIG.DB_NETWORK_DIR_PATH, graph_name + '.csv'), 'w')
     f.write(graph_csv)
     f.close()
 
 
 def _load_graph_csv_from_file_system(graph_name):
-    f = open(os.path.join(CONFIG.DB_DIR_PATH, graph_name + '.csv'), 'r')
+    f = open(os.path.join(CONFIG.DB_NETWORK_DIR_PATH, graph_name + '.csv'), 'r')
     network = gt.load_graph_from_csv(file_name=f, directed=False, csv_options={'delimiter': '\t'})
     f.close()
 
     return network
-
-
-if __name__ == '__main__':
-    print _compute_graph_properties('sample_network')

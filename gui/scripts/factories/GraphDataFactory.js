@@ -1,5 +1,8 @@
-function GraphDataFactory($http, Upload, URL) {
-    let graphData = {};
+function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
+    let graphData = {
+        guiNetworkFormat: {},
+        networkProperties: {}
+    };
 
     return {
         getGraphData: getGraphData,
@@ -14,20 +17,25 @@ function GraphDataFactory($http, Upload, URL) {
     }
 
     function getGraphGuiFormat() {
-        return graphData;
+        return graphData.guiNetworkFormat;
     }
 
     function getGraphProperties() {
-        return graphData;
+        return graphData.networkProperties;
+    }
+
+    function _updateGraphData(newGraphData) {
+        graphData = newGraphData;
+        $rootScope.$broadcast(EVENTS.NEW_GRAPH_DATA);
     }
 
     function computeGraphProperties(file) {
         Upload.upload({
-            url: URL.NETWORK_UPLOAD_URL, // flask
+            url: URL.NETWORK_UPLOAD_URL,
             data: { file: file },
             method: 'POST'
         }).then(function(response) {
-            graphData = response.data;
+            _updateGraphData(response.data);
         }, function(response) {
             if (response.status > 0) {
                 console.error(response.status + ': ' + response.data);
@@ -40,8 +48,7 @@ function GraphDataFactory($http, Upload, URL) {
             method: 'GET',
             url: URL.GET_EXAMPLE_NETWORK_URL
         }).then(function success (response) {
-            graphData = response.data;
-            console.log(graphData);
+            _updateGraphData(response.data);
         }, function failure (response) {
             if (response.status > 0) {
                 console.error(response.status + ': ' + response.data);
@@ -50,4 +57,4 @@ function GraphDataFactory($http, Upload, URL) {
     }
 }
 
-export default ['$http', 'Upload', 'URL', GraphDataFactory];
+export default ['$rootScope', '$http', 'Upload', 'URL', 'EVENTS', GraphDataFactory];

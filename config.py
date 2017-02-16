@@ -8,3 +8,6 @@ GRAPH_DIR_PATH = os.path.join(ROOT_DIR_PATH, 'graph')
 GENERATOR_DIR_PATH = os.path.join(ROOT_DIR_PATH, 'generator')
 DATA_DIR_PATH = os.path.join(GRAPH_DIR_PATH, 'data')
 RESULTS_DIR_PATH = os.path.join(GRAPH_DIR_PATH, 'results')
+
+DB_NETWORK_DIR_PATH = os.path.join(DB_DIR_PATH, 'networks')
+DB_PLOT_DIR_PATH = os.path.join(DB_DIR_PATH, 'plots')

@@ -1,32 +1,10 @@
-function FormController($scope, Upload, $timeout) {
+function FormController($scope, GraphDataFactory) {
     $scope.graphComputationResult = {};
-
-    // upload later on form submit
-    $scope.submit = function() {
-        if ($scope.form.file.$valid && $scope.file) {
-            $scope.upload($scope.file);
-        }
-    };
 
     // upload on file select
     $scope.uploadFile = function(file) {
         if (file) {
-            $scope.file = file;
-            Upload.upload({
-                url: 'http://localhost:3000/api/network', // flask
-                data: { file: file },
-                method: 'POST'
-            }).then(function(response) {
-                $scope.graphComputationResult = response.data;
-                $scope.file = {};
-                console.log($scope.graphComputationResult);
-            }, function(response) {
-                if (response.status > 0) {
-                    $scope.errorMsg = response.status + ': ' + response.data;
-                    $scope.file = {};
-                    console.log('Error status: ' + response.status);
-                }
-            });
+            GraphDataFactory.computeGraphProperties(file);
         }
     };
 
@@ -35,9 +13,10 @@ function FormController($scope, Upload, $timeout) {
         probability: 0.25
     };
 
-    $scope.change = function() {
+    // NEED TO HANDLE OPTION CHANGED!!
+    $scope.onOptionChange = function() {
         console.log($scope.graphOptions);
     };
 }
 
-export default ['$scope', 'Upload', '$timeout', FormController];
+export default ['$scope', 'GraphDataFactory', FormController];
