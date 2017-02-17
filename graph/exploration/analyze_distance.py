@@ -1,16 +1,17 @@
 import os
 import cPickle
 from graph.analyzer import distance_analyzer
+from graph.util import data_util
 import config as CONFIG
 
 
 def _read_stored_distance_distributions():
-    files = os.listdir(CONFIG.RESULTS_DIR_PATH)
+    files = os.listdir(os.path.join(CONFIG.RESULTS_DIR_PATH, 'shortest_distance'))
     distance_distributions = []
 
     for file_name in files:
         if file_name.startswith('shortest_distance_result_'):
-            file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, file_name)
+            file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'shortest_distance', file_name)
             f = open(file_path, 'rb')
             distance_distributions.append(cPickle.load(f))
             f.close()
@@ -19,8 +20,12 @@ def _read_stored_distance_distributions():
 
 
 def main():
-    no_of_nodes = 1000
+    network = data_util.get_network()
+    no_of_nodes = network.num_vertices()
+
     distance_distributions = _read_stored_distance_distributions()
+    print sum(distance_distributions.values())
+
     combined_distance_distribution = distance_analyzer.combine_multiple_distance_distributions(distance_distributions)
 
     print combined_distance_distribution
