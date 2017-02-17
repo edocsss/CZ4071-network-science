@@ -13,6 +13,8 @@ def visualize_graph(network, file_name):
 
 if __name__ == '__main__':
     network = data_util.get_network()
+    print 'Start!'
     start = time.time()
     visualize_graph(network, 'youtube_full_network.png')
     print time.time() - start
+    print 'Stop!'
