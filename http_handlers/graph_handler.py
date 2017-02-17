@@ -18,18 +18,18 @@ blueprint = Blueprint('graph_handler', __name__)
 @blueprint.route('/api/network', methods=['POST'])
 def handle_graph():
     f = request.files['file']
-    graph_name = f.filename.split('.')[0]
+    network_name = f.filename.split('.')[0]
     graph_csv = f.read()
 
-    _store_graph_csv_to_file_system(graph_name, graph_csv)
-    result = _analyze_real_network_properties(graph_name)
+    _store_graph_csv_to_file_system(network_name, graph_csv)
+    result = _analyze_real_network_properties(network_name)
     return jsonify(result)
 
 
 @blueprint.route('/api/network', methods=['GET'])
 def handle_example_graph():
-    graph_name = 'sample_network_2'
-    result = _analyze_real_network_properties(graph_name)
+    network_name = 'sample_network'
+    result = _analyze_real_network_properties(network_name)
     return jsonify(result)
 
 
@@ -39,19 +39,19 @@ def handle_random_network():
     n = json['n']
     p = json['p']
 
-    result = _compute_random_network_properties(n, p)
+    result = _analyze_random_network_properties(n, p)
     return jsonify(result)
 
 
-def _analyze_real_network_properties(graph_name):
-    network = _load_graph_csv_from_file_system(graph_name)
+def _analyze_real_network_properties(network_name):
+    network = _load_graph_csv_from_file_system(network_name)
     is_too_big = _is_network_too_big(network.num_vertices(), network.num_edges())
 
-    analyzed_network_properties = _compute_real_network_properties(network)
+    analyzed_network_properties = _compute_real_network_properties(network_name, network)
     theoretical_scale_free_network_properties = _compute_scale_free_properties(network)
     gui_network_format = network_format_converter.convert_gt_network_to_gui_format(
         network,
-        graph_name,
+        network_name,
         analyzed_network_properties['real_kmax'],
         analyzed_network_properties['real_kmin'],
         use_image=is_too_big
@@ -65,14 +65,38 @@ def _analyze_real_network_properties(graph_name):
     }
 
 
-def _compute_real_network_properties(network):
+def _analyze_random_network_properties(n, p):
+    network = random_network_generator.generate_random_network(n, p)
+    network_name = uuid.uuid4()
+    is_too_big = _is_network_too_big(network.num_vertices(), network.num_edges())
+
+    analyzed_network_properties = _compute_real_network_properties(network_name, network)
+    theoretical_random_network_properties = _compute_random_network_properties(network.num_vertices(), p)
+
+    gui_network_format = network_format_converter.convert_gt_network_to_gui_format(
+        network,
+        network_name,
+        analyzed_network_properties['real_kmax'],
+        analyzed_network_properties['real_kmin'],
+        use_image=is_too_big
+    )
+
+    return {
+        'isTooBig': is_too_big,
+        'guiNetworkFormat': gui_network_format,
+        'analyzedNetworkProperties': analyzed_network_properties,
+        'theoreticalRandomNetworkProperties': theoretical_random_network_properties
+    }
+
+
+def _compute_real_network_properties(network_name, network):
     no_of_nodes = network.num_vertices()
     no_of_edges = network.num_edges()
 
     # Real Network Properties
     degree_count = degree_analyzer.count_degree(network)
     degree_distribution = degree_analyzer.calculate_degree_distribution(degree_count)
-    degree_prob_distribution = degree_analyzer.calculate_degree_prob_distribution(no_of_nodes, degree_distribution)
+    degree_prob_distribution_plot_url = degree_analyzer.plot_and_store_degree_prob_distribution(network_name, degree_count)
     average_degree = degree_analyzer.calculate_degree_moment(degree_count, n=1)
     degree_second_moment = degree_analyzer.calculate_degree_moment(degree_count, n=2)
     real_kmax = degree_analyzer.find_largest_degree(degree_distribution)
@@ -82,19 +106,19 @@ def _compute_real_network_properties(network):
     average_clustering_coefficient = clustering_coefficient_analyzer.calculate_average_clustering_coefficient(network)
 
     distance_distribution = distance_analyzer.get_distance_distribution(network)
-    distance_prob_distribution = distance_analyzer.calculate_distance_prob_distribution(distance_distribution)
+    distance_prob_distribution_plot_file_name = distance_analyzer.plot_and_store_distance_prob_distribution(network_name, distance_distribution)
     average_distance = distance_analyzer.calculate_average_distance(no_of_nodes, distance_distribution)
     diameter = distance_analyzer.find_network_diameter(distance_distribution)
 
     return {
         'no_of_nodes': no_of_nodes,
         'no_of_edges': no_of_edges,
-        'degree_prob_distribution': degree_prob_distribution,
+        'degree_prob_distribution_plot_file_name': degree_prob_distribution_plot_url,
         'average_degree': average_degree,
         'degree_second_moment': degree_second_moment,
         'real_kmax': real_kmax,
         'real_kmin': real_kmin,
-        'shortest_distance_prob_distribution': distance_prob_distribution,
+        'distance_prob_distribution_plot_file_name': distance_prob_distribution_plot_file_name,
         'average_distance': average_distance,
         'diameter': diameter,
         'global_clustering_coefficient': global_clustering_coefficient,
@@ -134,29 +158,6 @@ def _load_graph_csv_from_file_system(graph_name):
     f.close()
 
     return network
-
-
-def _analyze_random_network_properties(n, p):
-    network = random_network_generator.generate_random_network(n, p)
-    is_too_big = _is_network_too_big(network.num_vertices(), network.num_edges())
-
-    analyzed_network_properties = _compute_real_network_properties(network)
-    theoretical_random_network_properties = _compute_random_network_properties(network.num_vertices(), p)
-
-    gui_network_format = network_format_converter.convert_gt_network_to_gui_format(
-        network,
-        uuid.uuid4(),
-        analyzed_network_properties['real_kmax'],
-        analyzed_network_properties['real_kmin'],
-        use_image=is_too_big
-    )
-
-    return {
-        'isTooBig': is_too_big,
-        'guiNetworkFormat': gui_network_format,
-        'analyzedNetworkProperties': analyzed_network_properties,
-        'theoreticalRandomNetworkProperties': theoretical_random_network_properties
-    }
 
 
 def _compute_random_network_properties(n, p):

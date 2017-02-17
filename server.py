@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 from http_handlers import graph_handler
 
 

@@ -1,6 +1,9 @@
+import os
+import matplotlib.pyplot as plt
 from multiprocessing import Process, Queue
 from graph_tool import topology
 import numpy as np
+import config as CONFIG
 
 
 def _shortest_distance_runner_small_network(result_queue, network, thread_id, n_threads=8):
@@ -98,14 +101,36 @@ def find_network_diameter(distance_distribution):
 
 
 def calculate_distance_prob_distribution(distance_distribution):
+    result = {}
     if distance_distribution is None:
         return None
 
     total = sum(distance_distribution.values())
     for k, v in distance_distribution.items():
-        distance_distribution[k] /= float(total)
+        result[k] = float(distance_distribution[k]) / float(total)
 
-    return distance_distribution
+    return result
+
+
+def plot_and_store_distance_prob_distribution(network_name, distance_prob_distribution):
+    file_name = network_name + '_distance_distribution.png'
+    file_path = os.path.join(CONFIG.DB_PLOT_DIR_PATH, file_name)
+
+    x = []
+    y = []
+
+    for k, v in distance_prob_distribution.items():
+        x.append(k)
+        y.append(v)
+
+    plt.scatter(x, y, c='r')
+    plt.title('Shortest Distance Distribution')
+    plt.xlabel('d')
+    plt.ylabel('P(d)')
+    plt.savefig(file_path)
+    plt.close()
+
+    return file_name
 
 
 if __name__ == '__main__':

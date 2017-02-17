@@ -30,7 +30,7 @@ def _convert_network_to_json_format(network, kmax, kmin):
             'x': layout[v][0],
             'y': layout[v][1],
             'size': _scale_node_degree(v.out_degree(), kmax, kmin),
-            'color': '#FF0000'
+            'color': '#e74c3c'
         })
 
     for i, e in enumerate(network.edges()):
@@ -39,7 +39,7 @@ def _convert_network_to_json_format(network, kmax, kmin):
             'source': 'v' + str(int(e.source())),
             'target': 'v' + str(int(e.target())),
             'size': 0,
-            'color': '#000000'
+            'color': '#95a5a6'
         })
 
     return result
@@ -55,7 +55,7 @@ def _plot_network_and_save_as_image(network, network_name):
 
 
 def convert_gt_network_to_gui_format(network, network_name, kmax, kmin, use_image=False):
-    if use_image:
+    if not use_image:
         return _convert_network_to_json_format(network, kmax, kmin)
     else:
         return _plot_network_and_save_as_image(network, network_name)

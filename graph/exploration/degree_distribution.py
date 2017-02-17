@@ -78,6 +78,7 @@ def main():
 
     plot_degree_distribution(degree_prob_distribution, plot_loglog=True)
     plot_log_binned_degree_distribution(degree_count)
+    print degree_analyzer.plot_and_store_degree_prob_distribution('youtube', degree_count)
 
 
 if __name__ == '__main__':

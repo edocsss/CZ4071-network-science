@@ -24,13 +24,12 @@ def main():
     no_of_nodes = network.num_vertices()
 
     distance_distributions = _read_stored_distance_distributions()
-    print sum(distance_distributions.values())
-
     combined_distance_distribution = distance_analyzer.combine_multiple_distance_distributions(distance_distributions)
+    distance_prob_distribution = distance_analyzer.calculate_distance_prob_distribution(combined_distance_distribution)
 
-    print combined_distance_distribution
     print 'Average Distance:', distance_analyzer.calculate_average_distance(no_of_nodes, combined_distance_distribution)
     print 'Diameter:', distance_analyzer.find_network_diameter(combined_distance_distribution)
+    print distance_analyzer.plot_and_store_distance_prob_distribution('youtube', distance_prob_distribution)
 
 
 if __name__ == '__main__':

@@ -12,6 +12,8 @@ def log_binning(counter_dict, n_bins=50, plot=False):
         plt.xscale('log')
         plt.yscale('log')
         plt.show()
+    else:
+        plt.close()
 
     return n, bins
 
