@@ -76,6 +76,11 @@ def main():
     print('First Moment:', first_moment)
     print('Second Moment:', second_moment)
 
+    kmax = degree_analyzer.find_largest_degree(degree_distribution)
+    kmin = degree_analyzer.find_smallest_degree(degree_distribution)
+    print 'Largest Degree:', kmax
+    print 'Smallest Degree:', kmin
+
     plot_degree_distribution(degree_prob_distribution, plot_loglog=True)
     plot_log_binned_degree_distribution(degree_count)
     print degree_analyzer.plot_and_store_degree_prob_distribution('youtube', degree_count)

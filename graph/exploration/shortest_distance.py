@@ -73,7 +73,6 @@ def analyze_shortest_distance(network, n_process=16):
 
 
 def main():
-    # network = random_network_generator.generate_random_network(1000, p=0.35)
     network = data_util.get_network()
     analyze_shortest_distance(network, n_process=1)
 
