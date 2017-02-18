@@ -18,7 +18,10 @@ System.config({
     "angular": "github:angular/bower-angular@1.6.2",
     "angular-animate": "github:angular/bower-angular-animate@1.6.2",
     "angular-aria": "github:angular/bower-angular-aria@1.6.2",
+    "angular-block-ui": "npm:angular-block-ui@0.2.2",
+    "angular-busy": "npm:angular-busy@4.1.4",
     "angular-material": "github:angular/bower-material@1.1.3",
+    "angular-material-data-table": "npm:angular-material-data-table@0.10.10",
     "angular-messages": "github:angular/bower-angular-messages@1.6.2",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
@@ -60,9 +63,20 @@ System.config({
     "github:jspm/nodelibs-vm@0.1.0": {
       "vm-browserify": "npm:vm-browserify@0.0.4"
     },
-    "github:krispo/angular-nvd3@1.0.9": {
+    "npm:angular-busy@4.1.4": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:angular-material-data-table@0.10.10": {
+      "angular": "npm:angular@1.6.2",
+      "angular-material": "npm:angular-material@1.1.3",
+      "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:angular-material@1.1.3": {
       "angular": "github:angular/bower-angular@1.6.2",
-      "nvd3": "npm:nvd3@1.8.5"
+      "angular-animate": "github:angular/bower-angular-animate@1.6.2",
+      "angular-aria": "github:angular/bower-angular-aria@1.6.2",
+      "angular-messages": "github:angular/bower-angular-messages@1.6.2",
+      "css": "github:systemjs/plugin-css@0.1.32"
     },
     "npm:assert@1.4.1": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -91,10 +105,6 @@ System.config({
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
     "npm:ng-file-upload@12.2.13": {
-      "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:nvd3@1.8.5": {
-      "d3": "npm:d3@3.5.17",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:path-browserify@0.0.0": {

@@ -1,6 +1,6 @@
 import os
 import uuid
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, jsonify, send_from_directory
 import graph_tool as gt
 from graph.analyzer import degree_analyzer
 from graph.analyzer import distance_analyzer
@@ -43,6 +43,11 @@ def handle_random_network():
     return jsonify(result)
 
 
+@blueprint.route('/api/img/<filename>', methods=['GET'])
+def get_image(filename):
+    return send_from_directory(CONFIG.DB_PLOT_DIR_PATH, filename)
+
+
 def _analyze_real_network_properties(network_name):
     network = _load_graph_csv_from_file_system(network_name)
     is_too_big = _is_network_too_big(network.num_vertices(), network.num_edges())
@@ -67,7 +72,7 @@ def _analyze_real_network_properties(network_name):
 
 def _analyze_random_network_properties(n, p):
     network = random_network_generator.generate_random_network(n, p)
-    network_name = uuid.uuid4()
+    network_name = str(uuid.uuid4())
     is_too_big = _is_network_too_big(network.num_vertices(), network.num_edges())
 
     analyzed_network_properties = _compute_real_network_properties(network_name, network)

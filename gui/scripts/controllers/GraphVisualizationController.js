@@ -1,9 +1,15 @@
-function GraphVisualizationController($scope, $timeout, GraphDataFactory, EVENTS) {
+function GraphVisualizationController($scope, $window, $timeout, GraphDataFactory, EVENTS) {
     let s;
+    let padding = 10;
     let g = new sigma.classes.graph();
 
-    GraphDataFactory.getExampleGraphData();
-    $scope.$on(EVENTS.NEW_GRAPH_DATA, function () {
+    let h = Math.floor($window.innerHeight * (1 - padding / 100.0));
+
+    $scope.fullHeight = {
+        height: h + "px"
+    }
+
+    $scope.$on(EVENTS.NEW_GRAPH_DATA, function() {
         $scope.graphData = GraphDataFactory.getGraphGuiFormat();
         drawGraph();
     });
@@ -19,14 +25,14 @@ function GraphVisualizationController($scope, $timeout, GraphDataFactory, EVENTS
             settings: {
                 defaultEdgeType: 'curve',
                 defaultLabelColor: '#fff',
-			    defaultLabelSize: 14,
-			    defaultLabelBGColor: '#fff',
-			    defaultLabelHoverColor: '#000',
-			    labelThreshold: 6,
+                defaultLabelSize: 14,
+                defaultLabelBGColor: '#fff',
+                defaultLabelHoverColor: '#000',
+                labelThreshold: 6,
                 minNodeSize: 0,
-			    maxNodeSize: 10,
-			    minEdgeSize: 0,
-			    maxEdgeSize: 10,
+                maxNodeSize: 10,
+                minEdgeSize: 0,
+                maxEdgeSize: 10,
                 hideEdgesOnMove: true
             }
         });
@@ -44,4 +50,4 @@ function GraphVisualizationController($scope, $timeout, GraphDataFactory, EVENTS
     }
 }
 
-export default ['$scope', '$timeout', 'GraphDataFactory', 'EVENTS', GraphVisualizationController];
+export default ['$scope', '$window', '$timeout', 'GraphDataFactory', 'EVENTS', GraphVisualizationController];
