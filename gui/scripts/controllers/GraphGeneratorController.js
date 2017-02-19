@@ -1,9 +1,11 @@
 function GraphGeneratorController($scope, $window, GraphDataFactory) {
-    let percent = 22;
-    let h = $window.innerWidth;
+    if ($scope.isInitial) {
+        let percent = 22;
+        let w = $window.innerWidth;
 
-    $scope.navRight = {
-        width: Math.round(h * percent / 100.0) + "px"
+        $scope.navRight = {
+            width: Math.round(w * percent / 100.0) + "px"
+        }
     }
 
     $scope.graphComputationResult = {};

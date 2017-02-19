@@ -24,10 +24,18 @@ export default angular.module('graph-gui', ['ngMaterial', 'ngFileUpload', 'ngMes
     .controller('GraphPropertyController', GraphPropertyController)
     .controller('GraphGeneratorController', GraphGeneratorController)
     .factory('GraphDataFactory', GraphDataFactory)
-    .filter('underscore', function() {
+    .filter('propNameFilter', function() {
         return function(str) {
             let new_str = str.split("_").join(" ");
             return new_str.charAt(0).toUpperCase() + new_str.slice(1);
+        }
+    })
+    .filter('propValFilter', function($filter) {
+        return function(str, precision) {
+            if (!isNaN(str)) {
+                return $filter('number')(str, precision);
+            }
+            return str;
         }
     })
     .constant('URL', URL)

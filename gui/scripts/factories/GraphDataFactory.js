@@ -35,6 +35,10 @@ function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
         return graphData.theoreticalScaleFreeNetworkProperties;
     }
 
+    factory.getRandomNetworkProperties = function() {
+        return graphData.theoreticalRandomNetworkProperties;
+    }
+
     factory.haveImage = function() {
         return !graphData.isTooBig;
     }

@@ -29,7 +29,7 @@
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="Graph Visualization">
                     <!-- Use the simple syntax -->
-                    <div layout="row" layout-margin layout-fill layout-padding>
+                    <md-content layout="row" layout-margin layout-fill layout-padding>
                         <div layout="column" layout-sm="column" flex="75">
                             <!-- Network Graph Visuals -->
                             <div ng-controller="GraphVisualizationController" layout="row" id="graph-visualization-container">
@@ -82,12 +82,13 @@
                                 </md-card-content>
                             </md-card>
                         </div>
-                    </div>
+                    </md-content>
                 </md-tab>
                 <md-tab label="Graph Properties">
                     <!--Graph Properties-->
-                    <div layout-margin layout-padding ng-controller="GraphPropertyController" ng-show="!isInitial">
-                        <md-card>
+                    <md-content layout="column" layout-align="center center" layout-margin layout-padding ng-controller="GraphPropertyController" ng-show="!isInitial">
+                        <!-- Computed Properties -->
+                        <md-card class="properties">
                             <md-card-title>
                                 <md-card-title-text>
                                     <span class="md-headline text-center">Computed Network Properties</span>
@@ -106,15 +107,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody md-body>
-                                                    <tr md-row ng-repeat="(propName, propVal) in realProps" ng-if="propVal && propName != 'degree_prob_distribution_plot_file_name' && propName != 'distance_prob_distribution_plot_file_name' ">
-                                                        <td md-cell>{{ propName | underscore }}</td>
-                                                        <td md-cell>{{ propVal | number:2 }}</td>
+                                                    <tr md-row ng-repeat="(propName, propVal) in realProps" ng-if="validValue(propName, propVal)">
+                                                        <td md-cell>{{ propName | propNameFilter }}</td>
+                                                        <td md-cell>{{ propVal | propValFilter:2 }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </md-table-container>
                                     </div>
-                                    <div flex="50">
+                                    <div flex="50" ng-if="scaleFreeProps">
                                         <h2 class="md-title text-center">Scale-Free Network Properties (Theory)</h2>
                                         <md-table-container>
                                             <table md-table>
@@ -125,9 +126,28 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody md-body>
-                                                    <tr md-row ng-repeat="(propName, propVal) in scaleFreeProps" ng-if="propVal">
-                                                        <td md-cell>{{ propName | underscore }}</td>
-                                                        <td md-cell>{{ propVal | number:2 }}</td>
+                                                    <tr md-row ng-repeat="(propName, propVal) in scaleFreeProps" ng-if="validValue(propName, propVal)">
+                                                        <td md-cell>{{ propName | propNameFilter }}</td>
+                                                        <td md-cell>{{ propVal | propValFilter:2 }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                    </div>
+                                    <div flex="50" ng-if="randomProps">
+                                        <h2 class="md-title text-center">Random Network Properties (Theory)</h2>
+                                        <md-table-container>
+                                            <table md-table>
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>Graph Property</th>
+                                                        <th md-column>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row ng-repeat="(propName, propVal) in randomProps" ng-if="validValue(propName, propVal)">
+                                                        <td md-cell>{{ propName | propNameFilter }}</td>
+                                                        <td md-cell>{{ propVal | propValFilter:2 }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -138,7 +158,7 @@
                         </md-card>
 
                         <!-- Plotted Properties -->
-                        <md-card ng-show="haveImage">
+                        <md-card ng-show="haveImage" class="properties">
                             <md-card-title>
                                 <md-card-title-text>
                                     <span class="md-headline text-center">Plotted Properties</span>
@@ -155,7 +175,7 @@
                                 </div>
                             </md-card-content>
                         </md-card>
-                    </div>
+                    </md-content>
                 </md-tab>
             </md-tabs>
         </div>

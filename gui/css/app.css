@@ -3,7 +3,7 @@ md-toolbar h1 {
 }
 
 .plot img {
-    width: 80%;
+    width: 100%;
     height: auto;
     display: block;
     margin-left: auto;
@@ -18,13 +18,16 @@ md-toolbar h1 {
     margin-left: 0 !important;
 }
 
+div.md-errors-spacer {
+    display: none;
+}
+
 button.full-width {
     width: 100%;
 }
 
 #graph-container {
     width: 100%;
-    height: 100%;
 }
 
 .nav-fixed {
@@ -39,7 +42,6 @@ button.full-width {
 #loading-message {
     text-align: center;
     position: absolute;
-    top: 40%;
     width: 100%;
     font-size: 26px;
     text-shadow: 1px 1px 2px white, -1px -1px 2px white, -4px 4px 4px white, -4px 4px 4px white
@@ -47,6 +49,21 @@ button.full-width {
 
 #progress-circular {
     position: absolute;
-    top: 30%;
     left: 47%;
+}
+
+.tabs-wrapper {
+    position: fixed;
+}
+
+.full-size {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.properties {
+    width: 75%;
 }

@@ -5,9 +5,8 @@ import config as CONFIG
 
 
 def _scale_node_degree(k, kmax, kmin):
-    temp = int(((k - kmin) / float((kmax - kmin))) * 10)
-    if temp == 0:
-        temp += 1
+    if (kmax - kmin > 0):
+        temp = int(((k - kmin) / float((kmax - kmin)) + 1) * 2)
 
     return math.pow(temp, 2)
 
@@ -30,7 +29,7 @@ def _convert_network_to_json_format(network, kmax, kmin):
             'x': layout[v][0],
             'y': layout[v][1],
             'size': _scale_node_degree(v.out_degree(), kmax, kmin),
-            'color': '#e74c3c'
+            'color': '#E91E63'
         })
 
     for i, e in enumerate(network.edges()):
@@ -39,7 +38,7 @@ def _convert_network_to_json_format(network, kmax, kmin):
             'source': 'v' + str(int(e.source())),
             'target': 'v' + str(int(e.target())),
             'size': 0,
-            'color': '#95a5a6'
+            'color': '#424242'
         })
 
     return result

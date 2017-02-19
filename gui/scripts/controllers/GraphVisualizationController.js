@@ -1,12 +1,14 @@
 function GraphVisualizationController($scope, $window, $timeout, GraphDataFactory, EVENTS) {
     let s;
-    let padding = 10;
     let g = new sigma.classes.graph();
 
-    let h = Math.floor($window.innerHeight * (1 - padding / 100.0));
+    if ($scope.isInitial) {
+        let padding = 10;
+        let h = Math.floor($window.innerHeight * (1 - padding / 100.0));
 
-    $scope.fullHeight = {
-        height: h + "px"
+        $scope.fullHeight = {
+            height: h + "px"
+        }
     }
 
     $scope.$on(EVENTS.NEW_GRAPH_DATA, function() {
