@@ -38,7 +38,7 @@ def calculate_degree_prob_distribution(network_name, n, p=0.05):
     x = np.sort(vals)
     unique = np.unique(x)
 
-    log_bins = np.logspace(math.log10(min(x)) if min(x) > 0 else unique[1], math.log10(max(x)), 50)
+    log_bins = np.logspace(math.log10(min(x)) if min(x) > 0 else math.log10(unique[1]), math.log10(max(x)), 50)
     y, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
     bin_centers = list((bins[1:] + bins[:-1]) / 2)
     y = list(y)
