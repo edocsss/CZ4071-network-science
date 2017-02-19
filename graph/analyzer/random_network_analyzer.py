@@ -26,6 +26,7 @@ def calculate_clustering_coefficient(p=0.05):
 def calculate_degree_prob_distribution(network_name, n, p=0.05):
     avg_degree = calculate_average_degree(n, p)
     size = 10000
+
     if n >= 1000:
         vals = np.random.poisson(avg_degree, size)
     else:
@@ -35,24 +36,23 @@ def calculate_degree_prob_distribution(network_name, n, p=0.05):
     file_path = os.path.join(CONFIG.DB_PLOT_DIR_PATH, file_name)
 
     x = np.sort(vals)
-    try:
-        log_bins = np.logspace(math.log10(min(x)), math.log10(max(x)), 50)
-        y, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
-        bin_centers = list((bins[1:] + bins[:-1]) / 2)
-        y = list(y)
+    unique = np.unique(x)
 
-        x_log, y_log = plot_util.get_log_log_points(bin_centers, y)
-        plt.clf()
-        plt.scatter(x_log, y_log, s=2, c='r')
-        plt.title('Log-Log Theoretical Degree Distribution with Log Binning')
-        plt.xlabel('k')
-        plt.ylabel('P(k)')
-        plt.savefig(file_path)
-        plt.close()
+    log_bins = np.logspace(math.log10(min(x)) if min(x) > 0 else unique[1], math.log10(max(x)), 50)
+    y, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
+    bin_centers = list((bins[1:] + bins[:-1]) / 2)
+    y = list(y)
 
-        return file_name
-    except ValueError:
-        return None
+    x_log, y_log = plot_util.get_log_log_points(bin_centers, y)
+    plt.clf()
+    plt.scatter(x_log, y_log, s=2, c='r')
+    plt.title('Log-Log Theoretical Degree Distribution with Log Binning')
+    plt.xlabel('k')
+    plt.ylabel('P(k)')
+    plt.savefig(file_path)
+    plt.close()
+
+    return file_name
 
 
 def get_regime_type(n, p=0.05):
