@@ -35,21 +35,24 @@ def calculate_degree_prob_distribution(network_name, n, p=0.05):
     file_path = os.path.join(CONFIG.DB_PLOT_DIR_PATH, file_name)
 
     x = np.sort(vals)
-    log_bins = np.logspace(math.log10(min(x)), math.log10(max(x)), 50)
-    y, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
-    bin_centers = list((bins[1:] + bins[:-1]) / 2)
-    y = list(y)
+    try:
+        log_bins = np.logspace(math.log10(min(x)), math.log10(max(x)), 50)
+        y, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
+        bin_centers = list((bins[1:] + bins[:-1]) / 2)
+        y = list(y)
 
-    x_log, y_log = plot_util.get_log_log_points(bin_centers, y)
-    plt.clf()
-    plt.scatter(x_log, y_log, s=2, c='r')
-    plt.title('Log-Log Theoretical Degree Distribution with Log Binning')
-    plt.xlabel('k')
-    plt.ylabel('P(k)')
-    plt.savefig(file_path)
-    plt.close()
+        x_log, y_log = plot_util.get_log_log_points(bin_centers, y)
+        plt.clf()
+        plt.scatter(x_log, y_log, s=2, c='r')
+        plt.title('Log-Log Theoretical Degree Distribution with Log Binning')
+        plt.xlabel('k')
+        plt.ylabel('P(k)')
+        plt.savefig(file_path)
+        plt.close()
 
-    return file_name
+        return file_name
+    except ValueError:
+        return None
 
 
 def get_regime_type(n, p=0.05):

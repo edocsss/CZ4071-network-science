@@ -44,7 +44,6 @@ function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
     };
 
     factory.computeGraphProperties = function(file) {
-        _startProcessing();
         return Upload.upload({
             url: URL.NETWORK_UPLOAD_URL,
             data: { file: file },
@@ -60,7 +59,6 @@ function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
     };
 
     factory.getExampleGraphData = function() {
-        _startProcessing();
         return $http({
             method: 'GET',
             url: URL.GET_EXAMPLE_NETWORK_URL
@@ -88,7 +86,6 @@ function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
     };
 
     factory.getRandomGraphData = function(jsonData) {
-        _startProcessing();
         return $http({
             data: JSON.stringify(jsonData),
             method: 'POST',

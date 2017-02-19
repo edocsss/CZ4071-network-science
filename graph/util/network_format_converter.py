@@ -7,7 +7,7 @@ import config as CONFIG
 def _scale_node_degree(k, kmax, kmin):
     temp = 1.00
     if (kmax - kmin > 0):
-        temp = int(((k - kmin) / float((kmax - kmin)) + 1) * 2)
+        temp = int(((k - kmin) / float((kmax - kmin)) + 1) * 10)
 
     return math.pow(temp, 2)
 

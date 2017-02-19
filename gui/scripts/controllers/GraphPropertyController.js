@@ -7,21 +7,38 @@ function GraphPropertyController($scope, GraphDataFactory, URL, EVENTS) {
         $scope.randomProps = GraphDataFactory.getRandomNetworkProperties();
 
         if (GraphDataFactory.haveImage()) {
-            $scope.degreeDistPlotSrc = URL.GET_IMAGE_URL + $scope.realProps.degree_prob_distribution_plot_file_name;
-            $scope.shortestDistPlotSrc = URL.GET_IMAGE_URL + $scope.realProps.distance_prob_distribution_plot_file_name;
-            $scope.haveImage = true;
+            if ($scope.realProps) {
+                if ($scope.realProps.degree_prob_distribution_plot_file_name) {
+                    $scope.degreeDistPlotSrc = URL.GET_IMAGE_URL + $scope.realProps.degree_prob_distribution_plot_file_name;
+                } else {
+                    $scope.degreeDistPlotSrc = "";
+                }
+                if ($scope.realProps.distance_prob_distribution_plot_file_name) {
+                    $scope.shortestDistPlotSrc = URL.GET_IMAGE_URL + $scope.realProps.distance_prob_distribution_plot_file_name;
+                } else {
+                    $scope.shortestDistPlotSrc = "";
+                }
+            }
+
+            if ($scope.randomProps) {
+                if ($scope.randomProps.expected_degree_distribution_plot_file_name) {
+                    $scope.expectedDegreeDistPlotSrc = URL.GET_IMAGE_URL + $scope.randomProps.expected_degree_distribution_plot_file_name;
+                } else {
+                    $scope.expectedDegreeDistPlotSrc = "";
+                }
+            }
+
+            $scope.haveImage = !!$scope.degreeDistPlotSrc || !!$scope.shortestDistPlotSrc || !!$scope.expectedDegreeDistPlotSrc;
         } else {
             $scope.haveImage = false;
         }
-
-        console.log(GraphDataFactory.getGraphData());
     });
 
     $scope.validValue = function(propName, propVal) {
-        if (propName == 'degree_prob_distribution_plot_file_name' || propName == 'distance_prob_distribution_plot_file_name') {
+        if (propName.indexOf('plot_file_name') != -1) {
             return false;
         }
-        return propVal === 0 || typeof propVal == 'number' || typeof propVal == 'string';
+        return propVal === 0 || !!propVal;
     };
 }
 

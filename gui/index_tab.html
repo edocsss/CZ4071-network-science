@@ -28,11 +28,10 @@
         <div cg-busy="{promise:myPromise,templateUrl:'loading.html'}">
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="Graph Visualization">
-                    <!-- Use the simple syntax -->
                     <md-content layout="row" layout-margin layout-fill layout-padding>
-                        <div layout="column" layout-sm="column" flex="75">
-                            <!-- Network Graph Visuals -->
-                            <div ng-controller="GraphVisualizationController" layout="row" id="graph-visualization-container">
+                        <!-- Network Graph Visuals -->
+                        <div layout="column" layout-sm="column" flex="75" ng-controller="GraphVisualizationController">
+                            <div layout="row" id="graph-visualization-container">
                                 <div id="graph-container" ng-style="fullHeight"></div>
                             </div>
                         </div>
@@ -164,14 +163,20 @@
                                     <span class="md-headline text-center">Plotted Properties</span>
                                 </md-card-title-text>
                             </md-card-title>
-                            <md-card-content layout="row" layout="space-between">
-                                <div flex="50" class="plot">
-                                    <h2 class="md-title text-center">Degree Distribution Plot</h2>
-                                    <img alt="Degree Distribution" ng-src="{{degreeDistPlotSrc}}" />
-                                </div>
-                                <div flex="50" class="plot">
-                                    <h2 class="md-title text-center">Shortest Distance Distribution Plot</h2>
-                                    <img alt="Distance Probability Distribution" ng-src="{{shortestDistPlotSrc}}" />
+                            <md-card-content>
+                                <div layout="row" layout-wrap>
+                                    <div flex="50" class="plot">
+                                        <h2 class="md-title text-center">Degree Distribution Plot</h2>
+                                        <img alt="Degree Distribution" ng-src="{{degreeDistPlotSrc}}" />
+                                    </div>
+                                    <div flex="50" class="plot">
+                                        <h2 class="md-title text-center">Shortest Distance Distribution Plot</h2>
+                                        <img alt="Distance Probability Distribution" ng-src="{{shortestDistPlotSrc}}" />
+                                    </div>
+                                    <div flex="50" class="plot">
+                                        <h2 class="md-title text-center">Shortest Distance Distribution Plot</h2>
+                                        <img alt="Distance Probability Distribution" ng-src="{{shortestDistPlotSrc}}" />
+                                    </div>
                                 </div>
                             </md-card-content>
                         </md-card>

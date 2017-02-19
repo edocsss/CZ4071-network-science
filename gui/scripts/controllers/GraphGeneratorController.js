@@ -8,7 +8,6 @@ function GraphGeneratorController($scope, $window, GraphDataFactory) {
         };
     }
 
-    $scope.graphComputationResult = {};
     $scope.uploadFile = function(file) {
         if (file) {
             $scope.setPromise(GraphDataFactory.computeGraphProperties(file));
