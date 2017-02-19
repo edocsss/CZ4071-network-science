@@ -28,7 +28,7 @@ export default angular.module('graph-gui', ['ngMaterial', 'ngFileUpload', 'ngMes
         return function(str) {
             let new_str = str.split("_").join(" ");
             return new_str.charAt(0).toUpperCase() + new_str.slice(1);
-        }
+        };
     })
     .filter('propValFilter', function($filter) {
         return function(str, precision) {
@@ -36,7 +36,7 @@ export default angular.module('graph-gui', ['ngMaterial', 'ngFileUpload', 'ngMes
                 return $filter('number')(str, precision);
             }
             return str;
-        }
+        };
     })
     .constant('URL', URL)
     .constant('EVENTS', EVENTS);

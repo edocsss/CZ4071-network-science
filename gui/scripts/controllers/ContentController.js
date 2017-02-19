@@ -8,7 +8,7 @@
 
      $scope.setPromise = function(promise) {
          $scope.myPromise = promise;
-     }
+     };
 
      $scope.$on(EVENTS.NEW_GRAPH_DATA, function() {
          $scope.isInitial = false;
@@ -20,12 +20,14 @@
          let circularProgressTop = 35;
          let loadingMessageTop = 50;
          let h = $window.innerHeight;
+
          $scope.circularTopPos = {
              top: Math.round(h * circularProgressTop / 100.0) + 'px'
-         }
+         };
+
          $scope.loadingMessageTopPos = {
              top: Math.round(h * loadingMessageTop / 100.0) + 'px'
-         }
+         };
      }
  }
 

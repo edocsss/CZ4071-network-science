@@ -107,6 +107,9 @@ def calculate_distance_prob_distribution(distance_distribution):
 
     total = sum(distance_distribution.values())
     for k, v in distance_distribution.items():
+        if k > total or k == 0:
+            continue
+
         result[k] = float(distance_distribution[k]) / float(total)
 
     return result
@@ -115,6 +118,7 @@ def calculate_distance_prob_distribution(distance_distribution):
 def plot_and_store_distance_prob_distribution(network_name, distance_prob_distribution):
     file_name = network_name + '_distance_distribution.png'
     file_path = os.path.join(CONFIG.DB_PLOT_DIR_PATH, file_name)
+    print distance_prob_distribution
 
     x = []
     y = []
@@ -123,6 +127,7 @@ def plot_and_store_distance_prob_distribution(network_name, distance_prob_distri
         x.append(k)
         y.append(v)
 
+    plt.clf()
     plt.scatter(x, y, c='r')
     plt.title('Shortest Distance Distribution')
     plt.xlabel('d')

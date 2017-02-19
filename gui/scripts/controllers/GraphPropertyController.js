@@ -22,7 +22,7 @@ function GraphPropertyController($scope, GraphDataFactory, URL, EVENTS) {
             return false;
         }
         return propVal === 0 || typeof propVal == 'number' || typeof propVal == 'string';
-    }
+    };
 }
 
 export default ['$scope', 'GraphDataFactory', 'URL', 'EVENTS', GraphPropertyController];

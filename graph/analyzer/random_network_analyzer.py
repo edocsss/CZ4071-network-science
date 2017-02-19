@@ -1,5 +1,9 @@
+import os
 import math
-from scipy.misc import factorial, comb
+import numpy as np
+import matplotlib.pyplot as plt
+from graph.util import plot_util
+import config as CONFIG
 
 
 def calculate_no_of_edges(n, p):
@@ -19,22 +23,33 @@ def calculate_clustering_coefficient(p=0.05):
     return p
 
 
-def calculate_degree_prob_distribution(n, p=0.05):
+def calculate_degree_prob_distribution(network_name, n, p=0.05):
     avg_degree = calculate_average_degree(n, p)
+    size = 10000
+    if n >= 1000:
+        vals = np.random.poisson(avg_degree, size)
+    else:
+        vals = np.random.binomial(n, p, size)
 
-    def _calculate_poisson_prob(k):
-        return {
-            k: math.pow(math.e, -avg_degree) * (math.pow(avg_degree, k) / factorial(k))
-        }
+    file_name = network_name + '_theoretical_degree_distribution_log_binning.png'
+    file_path = os.path.join(CONFIG.DB_PLOT_DIR_PATH, file_name)
 
-    def _calculate_binomial_prob(k):
-        return {
-            k: comb(n - 1, k) * math.pow(p, k) * math.pow(1 - p, n - 1 - k)
-        }
+    x = np.sort(vals)
+    log_bins = np.logspace(math.log10(min(x)), math.log10(max(x)), 50)
+    y, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
+    bin_centers = list((bins[1:] + bins[:-1]) / 2)
+    y = list(y)
 
-    k_values = [k for k in range(2 * int(avg_degree))]
-    prob_func = _calculate_poisson_prob if n >= 1000 else _calculate_binomial_prob
-    return map(prob_func, k_values)
+    x_log, y_log = plot_util.get_log_log_points(bin_centers, y)
+    plt.clf()
+    plt.scatter(x_log, y_log, s=2, c='r')
+    plt.title('Log-Log Theoretical Degree Distribution with Log Binning')
+    plt.xlabel('k')
+    plt.ylabel('P(k)')
+    plt.savefig(file_path)
+    plt.close()
+
+    return file_name
 
 
 def get_regime_type(n, p=0.05):

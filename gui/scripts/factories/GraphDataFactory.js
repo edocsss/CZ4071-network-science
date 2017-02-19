@@ -1,4 +1,4 @@
-function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
+function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
     var factory = {};
 
     let graphData = {
@@ -21,27 +21,27 @@ function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
 
     factory.getGraphData = function() {
         return graphData;
-    }
+    };
 
     factory.getGraphGuiFormat = function() {
         return graphData.guiNetworkFormat;
-    }
+    };
 
     factory.getRealNetworkProperties = function() {
         return graphData.analyzedNetworkProperties;
-    }
+    };
 
     factory.getScaleFreeNetworkProperties = function() {
         return graphData.theoreticalScaleFreeNetworkProperties;
-    }
+    };
 
     factory.getRandomNetworkProperties = function() {
         return graphData.theoreticalRandomNetworkProperties;
-    }
+    };
 
     factory.haveImage = function() {
         return !graphData.isTooBig;
-    }
+    };
 
     factory.computeGraphProperties = function(file) {
         _startProcessing();
@@ -57,7 +57,7 @@ function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
             }
             _stopProcessing();
         });
-    }
+    };
 
     factory.getExampleGraphData = function() {
         _startProcessing();
@@ -72,7 +72,7 @@ function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
             }
             _stopProcessing();
         });
-    }
+    };
 
     factory.getImageData = function(fileName) {
         return $http({
@@ -85,7 +85,7 @@ function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
                 console.error(response.status + ': ' + response.data);
             }
         });
-    }
+    };
 
     factory.getRandomGraphData = function(jsonData) {
         _startProcessing();
@@ -102,9 +102,9 @@ function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
             }
             _stopProcessing();
         });
-    }
+    };
 
     return factory;
 }
 
-export default ['$rootScope', '$http', 'Upload', 'URL', 'EVENTS', GraphDataFactory];
+export default ['$rootScope', '$window', '$http', 'Upload', 'URL', 'EVENTS', GraphDataFactory];

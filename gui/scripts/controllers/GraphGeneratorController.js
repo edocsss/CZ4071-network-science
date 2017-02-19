@@ -5,7 +5,7 @@ function GraphGeneratorController($scope, $window, GraphDataFactory) {
 
         $scope.navRight = {
             width: Math.round(w * percent / 100.0) + "px"
-        }
+        };
     }
 
     $scope.graphComputationResult = {};
@@ -22,7 +22,7 @@ function GraphGeneratorController($scope, $window, GraphDataFactory) {
 
     $scope.submitJson = function() {
         $scope.setPromise(GraphDataFactory.getRandomGraphData($scope.graphOptions));
-    }
+    };
 }
 
 export default ['$scope', '$window', 'GraphDataFactory', GraphGeneratorController];

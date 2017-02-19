@@ -44,7 +44,7 @@
                         <md-card-content>
                             <div layout="row" layout-align="space-around none" layout-margin>
                                 <div flex="50">
-                                    <h2 class="md-title text-center">Real Network Properties (Observed)</h2>
+                                    <h2 class="md-title text-center">Real Network (Observed)</h2>
                                     <md-table-container>
                                         <table md-table>
                                             <thead md-head>
@@ -63,7 +63,7 @@
                                     </md-table-container>
                                 </div>
                                 <div flex="50" ng-if="scaleFreeProps">
-                                    <h2 class="md-title text-center">Scale-Free Network Properties (Theory)</h2>
+                                    <h2 class="md-title text-center">Scale-Free Network (Theory)</h2>
                                     <md-table-container>
                                         <table md-table>
                                             <thead md-head>
@@ -82,7 +82,7 @@
                                     </md-table-container>
                                 </div>
                                 <div flex="50" ng-if="randomProps">
-                                    <h2 class="md-title text-center">Random Network Properties (Theory)</h2>
+                                    <h2 class="md-title text-center">Random Network (Theory)</h2>
                                     <md-table-container>
                                         <table md-table>
                                             <thead md-head>
@@ -139,9 +139,9 @@
                                 <form name="graphUploadForm">
                                     <md-button id="csv" ngf-select="uploadFile($file)" ngf-max-size="2MB" class="md-block md-raised md-primary margin-left-zero full-width" style="color:white">Upload CSV</md-button>
                                     <div class="md-caption" layout="column">
-                                        Acceptable file format: edge list of source and target nodes separated by a tab.</br>
+                                        <b>File Format:</b> Edge list of source and target nodes separated by a tab.</br>
                                         </br>
-                                        Note: Larger node sizes have longer processing time.
+                                        <b>Note:</b> Larger node sizes have longer processing time.
                                     </div>
                                 </form>
                             </div>
@@ -151,13 +151,13 @@
                                     <md-input-container class="md-block">
                                         <label>Number of Nodes (N)</label>
                                         <input name="n" ng-model="graphOptions.n" type="number" required>
-                                        <div class="md-caption">Note: larger node sizes have longer processing time.</div>
+                                        <div class="md-caption"><b>Note:</b> larger node sizes have longer processing time.</div>
                                         <div ng-messages="graphOptionForm.numberOfNodes.$error" role="alert" md-auto-hide="true">
                                             <div ng-message="required" class="form-message">You must supply the number of nodes.</div>
                                         </div>
                                     </md-input-container>
                                     <md-input-container class="md-block">
-                                        <label>Proability Distribution (p)</label>
+                                        <label>Probability (p)</label>
                                         <input name="p" min=0 max=1 type="number" step="any" ng-model="graphOptions.p" required>
                                         <div ng-messages="graphOptionForm.probability.$error" role="alert" md-auto-hide="true">
                                             <div ng-message="required" class="form-message">You must supply the probability.</div>

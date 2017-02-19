@@ -45,7 +45,9 @@ def handle_random_network():
 
 @blueprint.route('/api/img/<filename>', methods=['GET'])
 def get_image(filename):
-    return send_from_directory(CONFIG.DB_PLOT_DIR_PATH, filename)
+    img = send_from_directory(CONFIG.DB_PLOT_DIR_PATH, filename)
+    os.remove(os.path.join(CONFIG.DB_PLOT_DIR_PATH, filename))
+    return img
 
 
 def _analyze_real_network_properties(network_name):
@@ -76,7 +78,7 @@ def _analyze_random_network_properties(n, p):
     is_too_big = _is_network_too_big(network.num_vertices(), network.num_edges())
 
     analyzed_network_properties = _compute_real_network_properties(network_name, network)
-    theoretical_random_network_properties = _compute_random_network_properties(network.num_vertices(), p)
+    theoretical_random_network_properties = _compute_random_network_properties(network_name, network.num_vertices(), p)
 
     gui_network_format = network_format_converter.convert_gt_network_to_gui_format(
         network,
@@ -111,7 +113,11 @@ def _compute_real_network_properties(network_name, network):
     average_clustering_coefficient = clustering_coefficient_analyzer.calculate_average_clustering_coefficient(network)
 
     distance_distribution = distance_analyzer.get_distance_distribution(network)
-    distance_prob_distribution_plot_file_name = distance_analyzer.plot_and_store_distance_prob_distribution(network_name, distance_distribution)
+    distance_prob_distribution = distance_analyzer.calculate_distance_prob_distribution(distance_distribution)
+    distance_prob_distribution_plot_file_name = distance_analyzer.plot_and_store_distance_prob_distribution(
+        network_name,
+        distance_prob_distribution
+    )
     average_distance = distance_analyzer.calculate_average_distance(no_of_nodes, distance_distribution)
     diameter = distance_analyzer.find_network_diameter(distance_distribution)
 
@@ -165,10 +171,10 @@ def _load_graph_csv_from_file_system(graph_name):
     return network
 
 
-def _compute_random_network_properties(n, p):
+def _compute_random_network_properties(network_name, n, p):
     expected_no_of_edges = random_network_analyzer.calculate_no_of_edges(n, p)
     expected_average_degree = random_network_analyzer.calculate_average_degree(n, p)
-    expected_degree_distribution = random_network_analyzer.calculate_degree_prob_distribution(n, p)
+    expected_degree_distribution_plot_file_name = random_network_analyzer.calculate_degree_prob_distribution(network_name, n, p)
     expected_regime_type = random_network_analyzer.get_regime_type(n, p)
 
     expected_average_distance = random_network_analyzer.calculate_average_distance(n, p)
@@ -178,7 +184,7 @@ def _compute_random_network_properties(n, p):
         'p': p,
         'expected_no_of_nodes': n,
         'expected_no_of_edges': expected_no_of_edges,
-        'expected_degree_distribution': expected_degree_distribution,
+        'expected_degree_distribution_plot_file_name': expected_degree_distribution_plot_file_name,
         'expected_average_degree': expected_average_degree,
         'expected_regime_type': expected_regime_type,
         'expected_average_distance': expected_average_distance,

@@ -8,7 +8,7 @@ function GraphVisualizationController($scope, $window, $timeout, GraphDataFactor
 
         $scope.fullHeight = {
             height: h + "px"
-        }
+        };
     }
 
     $scope.$on(EVENTS.NEW_GRAPH_DATA, function() {
