@@ -1,12 +1,10 @@
 import cPickle
 import os
 from multiprocessing import Process
-import time
 
 import numpy as np
 from graph_tool import topology
 
-from graph.generator import random_network_generator
 from graph.util import data_util
 import config as CONFIG
 

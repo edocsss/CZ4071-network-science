@@ -2,8 +2,6 @@ import json
 import math
 import os
 
-import matplotlib.pyplot as plt
-
 import config as CONFIG
 from graph.util import data_util, plot_util
 from graph.analyzer import degree_analyzer

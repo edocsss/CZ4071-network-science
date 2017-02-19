@@ -1,6 +1,5 @@
 import math
 from scipy.misc import factorial, comb
-import numpy as np
 
 
 def calculate_no_of_edges(n, p):

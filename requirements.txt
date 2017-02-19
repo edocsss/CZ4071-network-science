@@ -1,0 +1,6 @@
+pandas
+numpy
+graph-tool
+matplotlib
+scipy
+flask

@@ -11,3 +11,8 @@ def calculate_average_clustering_coefficient(network):
     lc = clustering.local_clustering(network, undirected=True)
     coeffs = lc.get_array()
     return float(np.sum(coeffs) / len(coeffs))
+
+
+def calculate_local_clustering_coefficients(network):
+    lc = clustering.local_clustering(network, undirected=True)
+    return lc.get_array()
