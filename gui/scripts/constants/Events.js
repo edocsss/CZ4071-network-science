@@ -1,7 +1,5 @@
 const EVENTS = {
-    NEW_GRAPH_DATA: 'new-graph-data',
-    START_PROCESS: 'start-process',
-    STOP_PROCESS: 'stop-process'
+    NEW_GRAPH_DATA: 'new-graph-data'
 };
 
 export default EVENTS;

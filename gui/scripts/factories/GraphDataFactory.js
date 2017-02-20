@@ -1,18 +1,12 @@
-function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
+function GraphDataFactory($rootScope, $http, Upload, URL, EVENTS) {
     var factory = {};
 
     let graphData = {
-        guiNetworkFormat: {},
-        networkProperties: {}
+        guiNetworkFormat: "",
+        analyzedNetworkProperties: "",
+        theoreticalScaleFreeNetworkProperties: "",
+        theoreticalRandomNetworkProperties: ""
     };
-
-    function _startProcessing() {
-        $rootScope.$broadcast(EVENTS.START_PROCESS);
-    }
-
-    function _stopProcessing() {
-        $rootScope.$broadcast(EVENTS.STOP_PROCESS);
-    }
 
     function _updateGraphData(newGraphData) {
         graphData = newGraphData;
@@ -54,7 +48,6 @@ function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
             if (response.status > 0) {
                 console.error(response.status + ': ' + response.data);
             }
-            _stopProcessing();
         });
     };
 
@@ -68,7 +61,6 @@ function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
             if (response.status > 0) {
                 console.error(response.status + ': ' + response.data);
             }
-            _stopProcessing();
         });
     };
 
@@ -97,11 +89,10 @@ function GraphDataFactory($rootScope, $window, $http, Upload, URL, EVENTS) {
             if (response.status > 0) {
                 console.error(response.status + ':' + response.data);
             }
-            _stopProcessing();
         });
     };
 
     return factory;
 }
 
-export default ['$rootScope', '$window', '$http', 'Upload', 'URL', 'EVENTS', GraphDataFactory];
+export default ['$rootScope', '$http', 'Upload', 'URL', 'EVENTS', GraphDataFactory];
