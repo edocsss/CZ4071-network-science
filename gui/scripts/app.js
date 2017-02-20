@@ -5,15 +5,19 @@ import 'angular-busy';
 import 'angular-material';
 import 'angular-messages';
 import 'angular-material-data-table';
+import 'angular-material/angular-material.min.css!';
+import 'angular-busy/dist/angular-busy.min.css!';
+import 'angular-material-data-table/dist/md-data-table.min.css!';
+import 'style/app.css!';
 import 'ng-file-upload';
 
-import ContentController from './controllers/ContentController';
-import GraphVisualizationController from './controllers/GraphVisualizationController';
-import GraphGeneratorController from './controllers/GraphGeneratorController';
-import GraphPropertyController from './controllers/GraphPropertyController';
-import GraphDataFactory from './factories/GraphDataFactory';
-import URL from './constants/URL';
-import EVENTS from './constants/Events';
+import ContentController from 'src/controllers/ContentController';
+import GraphVisualizationController from 'src/controllers/GraphVisualizationController';
+import GraphGeneratorController from 'src/controllers/GraphGeneratorController';
+import GraphPropertyController from 'src/controllers/GraphPropertyController';
+import GraphDataFactory from 'src/factories/GraphDataFactory';
+import URL from 'src/constants/URL';
+import EVENTS from 'src/constants/Events';
 
 export default angular.module('graph-gui', ['ngMaterial', 'ngFileUpload', 'ngMessages', 'cgBusy', 'ngAnimate', 'md.data.table'])
     .config(function($mdThemingProvider) {
