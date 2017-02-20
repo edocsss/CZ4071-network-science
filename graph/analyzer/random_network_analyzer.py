@@ -16,6 +16,10 @@ def calculate_average_degree(n, p=0.05):
 
 def calculate_average_distance(n, p=0.05):
     avg_degree = calculate_average_degree(n, p)
+
+    if avg_degree < 1.00:
+        return 'N/A'
+
     return math.log(n) / math.log(avg_degree)
 
 
@@ -58,10 +62,10 @@ def calculate_degree_prob_distribution(network_name, n, p=0.05):
 def get_regime_type(n, p=0.05):
     avg_degree = calculate_average_degree(n, p)
     if avg_degree < 1:
-        return 'subcritical'
+        return 'Sub Critical'
     elif avg_degree == 1:
-        return 'critical'
+        return 'Critical'
     elif avg_degree > math.log(n):
-        return 'connected'
+        return 'Connected'
     elif avg_degree > 1:
-        return 'supercritical'
+        return 'Super Critical'

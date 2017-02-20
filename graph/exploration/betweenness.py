@@ -10,12 +10,7 @@ def analyze_betweenness(_network):
 
     file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'vertex_betweenness.pkl')
     f = open(file_path, 'wb')
-    cPickle.dump(vb, f, cPickle.HIGHEST_PROTOCOL)
-    f.close()
-
-    file_path = os.path.join(CONFIG.RESULTS_DIR_PATH, 'edge_betweenness.pkl')
-    f = open(file_path, 'wb')
-    cPickle.dump(eb, f, cPickle.HIGHEST_PROTOCOL)
+    cPickle.dump(vb.get_array(), f, cPickle.HIGHEST_PROTOCOL)
     f.close()
 
 

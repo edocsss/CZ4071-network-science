@@ -88,7 +88,7 @@ def calculate_average_distance(no_of_nodes, distance_distribution):
     if distance_distribution is None:
         return None
 
-    total = sum([k * v for k, v in distance_distribution.items()])
+    total = sum([k * v for k, v in distance_distribution.items() if int(k) <= sum(distance_distribution.values())])
     max_no_of_edges = no_of_nodes * (no_of_nodes - 1) / 2
     return float(total) / float(max_no_of_edges)
 
@@ -97,7 +97,8 @@ def find_network_diameter(distance_distribution):
     if distance_distribution is None:
         return None
 
-    return max(distance_distribution.keys())
+    print distance_distribution
+    return max([k for k in distance_distribution.keys() if int(k) <= sum(distance_distribution.values())])
 
 
 def calculate_distance_prob_distribution(distance_distribution):
