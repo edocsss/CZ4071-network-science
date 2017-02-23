@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+    <title>Graph GUI</title>
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./jspm_packages/github/angular/bower-material@1.1.3/angular-material.min.css" />
+    <link rel="stylesheet" href="./jspm_packages/npm/angular-busy@4.1.4/dist/angular-busy.min.css" />
+    <link rel="stylesheet" href="./jspm_packages/npm/angular-material-data-table@0.10.10/dist/md-data-table.min.css" />
+    <link rel="stylesheet" href="./css/app.css" />
+</head>
+
+<body layout="column" ng-cloak>
+    <!-- Header -->
+    <md-toolbar layout="row" class="md-toolbar-tools">
+        <md-icon style="color:white">device_hub</md-icon>
+        <h1 flex>Graph GUI</h1>
+    </md-toolbar>
+
+    <!--Content-->
+    <md-content ng-controller='ContentController'>
+        <div cg-busy="{promise:myPromise,templateUrl:'loading.html'}">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Graph Visualization">
+                    <md-content layout="row" layout-margin layout-fill layout-padding>
+                        <!-- Network Graph Visuals -->
+                        <div layout="column" layout-sm="column" flex="75" ng-controller="GraphVisualizationController">
+                            <div layout="row" id="graph-visualization-container">
+                                <div id="graph-container" ng-style="fullHeight"></div>
+                            </div>
+                        </div>
+                        <!--Generate Graph Options-->
+                        <div flex="25" ng-controller="GraphGeneratorController">
+                            <md-card>
+                                <md-card-title>
+                                    <md-card-title-text>
+                                        <span class="md-headline">Generate Graph</span>
+                                    </md-card-title-text>
+                                </md-card-title>
+                                <md-card-content>
+                                    <div layout="column" flex>
+                                        <span class="md-subhead">Network Data</span>
+                                        <form name="graphUploadForm">
+                                            <md-button id="csv" ngf-select="uploadFile($file)" class="md-block md-raised md-primary margin-left-zero full-width" style="color:white">Upload CSV</md-button>
+                                            <div class="md-caption" layout="column">
+                                                <b>File format:</b> Edge list of source and target nodes separated by a tab.</br>
+                                                </br>
+                                                <b>Note:</b> Larger node sizes have longer processing time.
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div layout="column" flex style="margin-top: 2em;">
+                                        <span class="md-subhead">Generate Random Graph</span>
+                                        <form name="graphOptionForm" ng-submit="submitJson()">
+                                            <md-input-container class="md-block">
+                                                <label>Number of Nodes (N)</label>
+                                                <input name="n" ng-model="graphOptions.n" type="number" required>
+                                                <div class="md-caption">
+                                                    <b>Note:</b> Larger node sizes have longer processing time.</div>
+                                                <div ng-messages="graphOptionForm.n.$error" role="alert" md-auto-hide="true">
+                                                    <div ng-message="required" class="form-message">You must supply the number of nodes.</div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-input-container class="md-block">
+                                                <label>Proability Distribution (p)</label>
+                                                <input name="p" min=0 max=1 type="number" step="any" ng-model="graphOptions.p" required>
+                                                <div ng-messages="graphOptionForm.p.$error" role="alert" md-auto-hide="true">
+                                                    <div ng-message="required" class="form-message">You must supply the probability.</div>
+                                                    <div ng-message="min, max" class="form-message">Probability should be between 0 and 1.
+                                                    </div>
+                                                </div>
+                                            </md-input-container>
+                                            <md-button type="submit" class="md-raised md-primary margin-left-zero full-width" style="color:white">Generate Graph</md-button>
+                                        </form>
+                                    </div>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                    </md-content>
+                </md-tab>
+                <md-tab label="Graph Properties">
+                    <!--Graph Properties-->
+                    <md-content layout="column" layout-align="center center" layout-margin layout-padding ng-controller="GraphPropertyController" ng-show="!isInitial">
+                        <!-- Computed Properties -->
+                        <md-card class="properties">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline text-center">Computed Network Properties</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <div layout="row" layout-align="space-around none" layout-margin>
+                                    <div flex="50">
+                                        <h2 class="md-title text-center">Real Network Properties (Observed)</h2>
+                                        <md-table-container>
+                                            <table md-table>
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>Graph Property</th>
+                                                        <th md-column>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row ng-repeat="(propName, propVal) in realProps" ng-if="validValue(propName, propVal)">
+                                                        <td md-cell>{{ propName | propNameFilter }}</td>
+                                                        <td md-cell>{{ propVal | propValFilter:5 }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                    </div>
+                                    <div flex="50" ng-if="scaleFreeProps">
+                                        <h2 class="md-title text-center">Scale-Free Network Properties (Theory)</h2>
+                                        <md-table-container>
+                                            <table md-table>
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>Property</th>
+                                                        <th md-column>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row ng-repeat="(propName, propVal) in scaleFreeProps" ng-if="validValue(propName, propVal)">
+                                                        <td md-cell>{{ propName | propNameFilter }}</td>
+                                                        <td md-cell>{{ propVal | propValFilter:5 }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                    </div>
+                                    <div flex="50" ng-if="randomProps">
+                                        <h2 class="md-title text-center">Random Network Properties (Theory)</h2>
+                                        <md-table-container>
+                                            <table md-table>
+                                                <thead md-head>
+                                                    <tr md-row>
+                                                        <th md-column>Graph Property</th>
+                                                        <th md-column>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody md-body>
+                                                    <tr md-row ng-repeat="(propName, propVal) in randomProps" ng-if="validValue(propName, propVal)">
+                                                        <td md-cell>{{ propName | propNameFilter }}</td>
+                                                        <td md-cell>{{ propVal | propValFilter:5 }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </md-table-container>
+                                    </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+
+                        <!-- Plotted Properties -->
+                        <md-card ng-show="haveImage" class="properties">
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline text-center">Plotted Properties</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <div layout="row" layout-align="space-between" layout-wrap>
+                                    <div flex="50" class="plot" ng-if="degreeDistPlotSrc">
+                                        <h2 class="md-title text-center">Degree Distribution Plot</h2>
+                                        <img alt="Degree Distribution" ng-src="{{degreeDistPlotSrc}}" />
+                                    </div>
+                                    <div flex="50" class="plot" ng-if="shortestDistPlotSrc">
+                                        <h2 class="md-title text-center">Shortest Distance Distribution Plot</h2>
+                                        <img alt="Distance Probability Distribution" ng-src="{{shortestDistPlotSrc}}" />
+                                    </div>
+                                    <div flex="50" class="plot" ng-if="expectedDegreeDistPlotSrc">
+                                        <h2 class="md-title text-center">Expected Degree Distribution Plot</h2>
+                                        <img alt="Expected Degree Distribution" ng-src="{{expectedDegreeDistPlotSrc}}" />
+                                    </div>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </div>
+    </md-content>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/sigma.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.layout.forceAtlas2.min.js"></script>
+
+    <script src="./jspm_packages/system.js " type="text/javascript "></script>
+    <script src="./config.js " type="text/javascript "></script>
+    <script type="text/javascript ">
+        System
+            .import('./scripts/boot/boot.js')
+            .catch(console.error.bind(console)); // make sure any errors print to console
+    </script>
+</body>
+
+</html>

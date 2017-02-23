@@ -1,0 +1,33 @@
+{
+  "jspm": {
+    "directories": {
+      "lib": "src"
+    },
+    "dependencies": {
+      "angular": "github:angular/bower-angular@1.6.2",
+      "angular-animate": "github:angular/bower-angular-animate@1.6.2",
+      "angular-aria": "github:angular/bower-angular-aria@1.6.2",
+      "angular-block-ui": "npm:angular-block-ui@^0.2.2",
+      "angular-busy": "npm:angular-busy@^4.1.4",
+      "angular-material": "github:angular/bower-material@^1.1.3",
+      "angular-material-data-table": "npm:angular-material-data-table@^0.10.10",
+      "angular-messages": "github:angular/bower-angular-messages@^1.6.2",
+      "css": "github:systemjs/plugin-css@0.1.32",
+      "json": "github:systemjs/plugin-json@^0.3.0",
+      "ng-file-upload": "npm:ng-file-upload@^12.2.13",
+      "text": "github:systemjs/plugin-text@^0.0.9"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  },
+  "scripts": {
+    "postinstall": "jspm install",
+    "serve": "live-server ."
+  },
+  "devDependencies": {
+    "jspm": "^0.16.52"
+  }
+}
