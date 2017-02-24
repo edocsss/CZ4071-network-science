@@ -97,7 +97,6 @@ def find_network_diameter(distance_distribution):
     if distance_distribution is None:
         return None
 
-    print distance_distribution
     return max([k for k in distance_distribution.keys() if int(k) <= sum(distance_distribution.values())])
 
 
