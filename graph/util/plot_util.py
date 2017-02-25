@@ -5,15 +5,21 @@ import matplotlib.pyplot as plt
 
 def log_binning(counter_dict, n_bins=50, plot=False):
     x = np.sort(counter_dict.values())
-    log_bins = np.logspace(math.log10(min(x)), math.log10(max(x)), n_bins)
-    n, bins, _ = plt.hist(x, bins=log_bins, log=True, normed=True)
+    x_prime = []
+
+    for i in range(len(x)):
+        if x[i] > 0.00:
+            x_prime.append(x[i])
+
+    log_bins = np.logspace(math.log10(min(x_prime)), math.log10(max(x)), n_bins)
+    n, bins, _ = plt.hist(x_prime, bins=log_bins, log=True, normed=True)
 
     if plot:
         plt.xscale('log')
         plt.yscale('log')
         plt.show()
     else:
-        plt.close()
+        plt.clf()
 
     return n, bins
 

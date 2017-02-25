@@ -20,11 +20,11 @@ def calculate_real_degree_exponent(degree_count, plot=False):
         yl = [slope * math.log10(i) + intercept for i in range(1, 10000)]
 
         if plot:
-            plt.plot(xl, yl, 'r')
+            plt.plot(xl, yl, 'b')
             plot_util.plot_scatter(
                 bin_centers,
                 n,
-                title='Log-Log Degree Distribution',
+                title='Log-Log Degree Distribution with Log Binning',
                 x_label='k',
                 y_label='P(k)',
                 log_log=True

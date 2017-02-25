@@ -12,7 +12,7 @@ def _read_network(file_name='raw.csv', replace_pickle=False):
 
     if os.path.isfile(pickle_path) and not replace_pickle:
         print 'Reading graph from pickle..'
-        return _load_network()
+        return load_network()
 
     f = open(file_path, 'r')
     print 'Loading graph from raw file...'
@@ -25,12 +25,12 @@ def _read_network(file_name='raw.csv', replace_pickle=False):
     f.close()
 
     print 'storing graph...'
-    _store_network(G, file_name=pickle_name)
+    store_network(G, file_name=pickle_name)
 
     return G
 
 
-def _store_network(network, file_name='raw.pkl'):
+def store_network(network, file_name='raw.pkl'):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
     f = open(file_path, 'wb')
     gc.disable()
@@ -39,7 +39,7 @@ def _store_network(network, file_name='raw.pkl'):
     f.close()
 
 
-def _load_network(file_name='raw.pkl'):
+def load_network(file_name='raw.pkl'):
     file_path = os.path.join(CONFIG.DATA_DIR_PATH, file_name)
     f = open(file_path, 'rb')
     gc.disable()
@@ -50,7 +50,4 @@ def _load_network(file_name='raw.pkl'):
 
 
 def get_network():
-    return _network
-
-
-_network = _read_network(file_name='raw.csv', replace_pickle=False)
+    return _read_network(file_name='raw.csv', replace_pickle=False)

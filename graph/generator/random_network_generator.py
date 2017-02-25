@@ -1,9 +1,10 @@
 import os
+import time
 import subprocess
+
 import graph_tool as gt
+
 import config as CONFIG
-from graph_tool.generation import price_network
-from graph_tool.draw import graph_draw, sfdp_layout
 
 
 def generate_random_network(n, p=0.05):
@@ -33,13 +34,3 @@ def generate_random_network(n, p=0.05):
 
     os.remove(temp_file_path)
     return random_network
-
-
-if __name__ == '__main__':
-    import time
-    network = price_network(5000, m=2, directed=False)
-
-    start = time.time()
-    layout = sfdp_layout(network)
-    graph_draw(network, pos=layout, output='price.png')
-    print time.time() - start

@@ -1,11 +1,11 @@
-from graph.util import data_util, plot_util
-from graph.analyzer import degree_analyzer
-import time
-import os
 import math
-import config as CONFIG
+
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
+from graph.analyzer import degree_analyzer
+from graph.util import data_util, plot_util
 
 
 def get_all_possible_degree_values(network):
@@ -84,29 +84,42 @@ def plot_degree_correlations(degree_correlations, log_log=False):
 
     plt.clf()
     plt.scatter(x=x, y=y, s=2, c='r')
-    plt.title('Degree Correlations')
+    plt.title('Log-Log Degree Correlations')
     plt.xlabel('k')
     plt.ylabel('knn(k)')
     plt.show()
 
 
-def plot_log_binned_degree_correlations(degree_correlations):
-    n, bins = plot_util.log_binning(degree_correlations, n_bins=100)
-    bin_centers = list((bins[1:] + bins[:-1]) / 2)
-    n = list(n)
+def plot_log_binned_degree_correlations(network, degree_correlations):
+    degree_count = degree_analyzer.count_degree(network)
+    df = pd.DataFrame(data=degree_count.items(), columns=['vid', 'k'])
+    k_values = df['k'].unique()
 
-    plot_util.plot_scatter(
-        bin_centers,
-        n,
-        title='Log-Log Degree Correlations with Log Binning',
-        x_label='k',
-        y_label='knn(k)',
-        log_log=True
-    )
+    log_bins = np.logspace(math.log10(min(k_values)), math.log10(max(k_values)), 50)
+    x = list((log_bins[1:] + log_bins[:-1]) / 2)
+    y = {k: [] for k in range(len(x))}
+
+    deg = degree_correlations.items()
+    for i in range(len(deg)):
+        for j in range(0, len(log_bins) - 1):
+            if log_bins[j] <= deg[i][0] <= log_bins[j + 1]:
+                y[j].append(deg[i][1])
+                break
+
+    x_prime = []
+    y_prime = []
+
+    for l in range(len(y.keys())):
+        if len(y[l]) > 0:
+            x_prime.append(x[l])
+            y_prime.append(sum(y[l]) / len(y[l]))
+
+    plot_util.plot_scatter(x_prime, y_prime, title='Log-Log Degree Correlation with Log Binning', x_label='k',
+                           y_label='knn(k)', log_log=True)
 
 
 if __name__ == '__main__':
     network = data_util.get_network()
     degree_correlations = analyze_degree_correlation(network)
-    # plot_degree_correlations(degree_correlations, log_log=True)
-    plot_log_binned_degree_correlations(degree_correlations)
+    plot_degree_correlations(degree_correlations, log_log=True)
+    plot_log_binned_degree_correlations(network, degree_correlations)
