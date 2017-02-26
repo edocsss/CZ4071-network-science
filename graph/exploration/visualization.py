@@ -81,15 +81,18 @@ def generate_subgraph_from_network(edges):
 
 
 def main(network, n, e):
-    start = time.time()
-    subgraph = get_subgraph_with_n_nodes(network, max_n=max_n, max_edge_per_vertex=max_edge_per_vertex)
-    print time.time() - start
+    subgraph = get_subgraph_with_n_nodes(
+        network,
+        max_n=max_n,
+        max_edge_per_vertex=max_edge_per_vertex
+    )
 
-    start = time.time()
-    file_name = 'youtube_n_{}_e_{}.png'.format(max_n, max_edge_per_vertex)
+    file_name = 'youtube_n_{}_e_{}.png'.format(
+        max_n,
+        max_edge_per_vertex
+    )
+
     visualize_graph(subgraph, file_name)
-    print time.time() - start
-
 
 
 if __name__ == '__main__':
@@ -97,9 +100,14 @@ if __name__ == '__main__':
     for max_n in [100, 500, 1000, 5000, 7500, 10000, 50000, 100000]:
         processes = []
         for max_edge_per_vertex in [100, 300, 500, 1000, 5000]:
-            p = Process(target=main, args=(network, max_n, max_edge_per_vertex,))
+            p = Process(
+                target=main,
+                args=(network, max_n, max_edge_per_vertex,)
+            )
             p.start()
             processes.append(p)
 
         for p in processes:
             p.join()
+
+

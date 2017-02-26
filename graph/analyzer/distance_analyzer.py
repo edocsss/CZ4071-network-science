@@ -58,7 +58,9 @@ def combine_multiple_distance_distributions(distance_distribution_list):
 
 def get_distance_distribution(network, n_process=4):
     n_nodes = network.num_vertices()
-    if n_nodes > 10000:
+    n_edges = network.num_edges()
+
+    if n_nodes > 10000 or n_edges > 500000:
         return None
 
     processes = []
