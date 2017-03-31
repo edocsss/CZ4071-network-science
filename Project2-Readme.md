@@ -1,36 +1,53 @@
-1. Ssh to graph02
+## Ssh to Graph02 (master node)
   ssh to grpNT06s@distgraph.scse.ntu.edu.sg, password is (see in WA)  
   `ssh grpNT06s@distgraph.scse.ntu.edu.sg`  
+  
   ssh to graph02  
   `ssh graph02`  
   
-2. Setting up environment variables for both single node and distributed.
-There are two folders under graph02: single_node and distributed. We need to check if our code works in both modes.
-For distributed, source the setup.sh under distributed directory, while for single node mode source the setup.sh under the single_node directory  
-  `cd [single_node or distributed dir]`  
-  `source setup.sh`  
+## Setting up Environment Variables
+Settings must be set up for running code in single node or distributed modes. We need to check if our code works in both modes.  
+
+
+So, there are two folders under graph02: single_node and distributed. Each directory have its own setup.sh, so source the appropriate setup.sh according to which mode we want to use.  
+`cd [single_node or distributed dir]`
+`source setup.sh`
   
-This will set up the appropriate hadoop, java, and giraph environment variables according to the mode that is being used.   
-  
-3. Copying Java files
+`setup.sh` will set up the appropriate hadoop, java, and giraph environment variables according to the mode that is being used.   
+
+## Running Hadoop 
+Check the running Hadoop before running anything. Prior to the following services, ensure that the correct environment variables for the mode have been setup (try `echo $HADOOP_HOME` and `echo $GIRAPH_HOME`).
+
+### Stopping Hadoop Service
+`$HADOOP_HOME/sbin/stop-all.sh`  
+
+### Starting Hadoop Service
+`$HADOOP_HOME/sbin/start-all.sh`  
+
+### Checking Running Services
+`jps`
+For distributed: `NameNode`, `SecondaryNameNode`, `Jps` and `ResourceManager` should be displayed.
+For single_node: available services in distributed + `NodeManager`.
+
+## Copying Custom Java Files
 You need to copy your code into the giraph/custom-code directory under both single_node and distributed directory.   
-  copy your .java files into [single_node or distributed]/giraph/custom-code  
+copy .java files into `[single_node or distributed]/giraph/custom-code`
   
-4. Running custom code
-  a. Ensuring environment variable  
-  Be careful about which mode you are using because the environment variables affect how the jar is generated. So when you're using distributed make sure that the setup.sh for distributed is sourced, and vice versa for single_node.  
+## Running custom code
+### Confirm Environment Variables and the Running Hadoop
+Be careful about which mode you are using because the environment variables ($HADOOP_HOME and $GIRAPH_HOME) affect how the jar is generated. Same applies to the running Hadoop (single vs distributed), ensure that the correct Hadoop mode is running.
     
-  b. Generating Jar  
+### Generating Jar  
   cd to the [single_node or distributed]/giraph/custom-code , then run generate-jar.sh using the .java file that you want to run.  
   `cd [single_node or distributed]/giraph/custom-code`  
   `./generate-jar.sh [JAVA_FILENAME].java`  
-  This will generate the java class, a jar file that contains this class and its dependencies `custom-code.jar` in this directory, and copy the jar dependencies to the shared hadoop folder.  
+  This will generate the java class, a jar file that contains the Java class and its dependencies `custom-code.jar` in the current `custom-code` directory, and copy the jar dependencies to the shared hadoop folder.  
     
-  c. Running code  
-  Under the custom-code directory. Just edit, copy and run the following code. Note that the JAVA_FILENAME, is the generated java class name, without the .class extension. So if you have PageRankComputation.class, just use PageRankComputation without the .class extension  
+### Running Code  
+  Under the custom-code directory. Just edit, copy and run the following code. Note that the JAVA_FILENAME, is the generated java class name without the .class extension. So if you have `PageRankComputation.class`, just use `PageRankComputation` only.
   
   `$HADOOP_HOME/bin/hadoop jar custom-code.jar org.apache.giraph.GiraphRunner [JAVA_FILENAME] --yarnjars custom-code.jar -w 1 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /input/[txt_input] -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat  -op /output/[directory_output]`  
   
-  Note for input and output, please read the relevant documentation of how to upload input to Hadoop File system  
+  For input and output, please read the relevant documentation of how to upload input to Hadoop File system  
   Basically just run:  
   `$HADOOP_HOME/bin/hadoop dfs -put [input_file] [hadoop input directory]`  
