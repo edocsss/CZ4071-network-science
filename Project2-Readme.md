@@ -50,10 +50,11 @@ Be careful about which mode you are using because the environment variables ($HA
   `$HADOOP_HOME/bin/hadoop jar custom-code.jar org.apache.giraph.GiraphRunner [JAVA_FILENAME] --yarnjars custom-code.jar -w 1 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /input/[txt_input] -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat  -op /output/[directory_output]`  
   
 #### Single Node
- `$HADOOP_HOME/bin/hadoop jar custom-code.jar org.apache.giraph.GiraphRunner [JAVA_FILENAME] -w 1 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /input/[txt_input] -voforg.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /output/[directory_input] -ca giraph.SplitMasterWorker=false`
+ `$HADOOP_HOME/bin/hadoop jar custom-code.jar org.apache.giraph.GiraphRunner [JAVA_FILENAME] -w 1 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /input/[txt_input] -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /output/[directory_input] -ca giraph.SplitMasterWorker=false`
 
 ### Hadoop File System (output, input)
-- For input and output, please read the relevant documentation of how to upload input to Hadoop File system  
+- For input and output, please read the relevant documentation about Hadoop File system  
+[Link to HDFS 2.6.0](https://hadoop.apache.org/docs/r2.6.0/hadoop-project-dist/hadoop-common/FileSystemShell.html)
 - Listing existing file: -ls
   - input: `$HADOOP_HOME/bin/hadoop dfs -ls /input`  
   - output: `$HADOOP_HOME/bin/hadoop dfs -ls /output`  
