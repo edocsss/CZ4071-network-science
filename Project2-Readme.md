@@ -46,8 +46,17 @@ Be careful about which mode you are using because the environment variables ($HA
 ### Running Code  
   Under the custom-code directory. Just edit, copy and run the following code. Note that the JAVA_FILENAME, is the generated java class name without the .class extension. So if you have `PageRankComputation.class`, just use `PageRankComputation` only.
   
+#### Distributed
   `$HADOOP_HOME/bin/hadoop jar custom-code.jar org.apache.giraph.GiraphRunner [JAVA_FILENAME] --yarnjars custom-code.jar -w 1 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /input/[txt_input] -vof org.apache.giraph.io.formats.IdWithValueTextOutputFormat  -op /output/[directory_output]`  
   
-  For input and output, please read the relevant documentation of how to upload input to Hadoop File system  
-  Basically just run:  
+#### Single Node
+ `$HADOOP_HOME/bin/hadoop jar custom-code.jar org.apache.giraph.GiraphRunner [JAVA_FILENAME] -w 1 -vif org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat -vip /input/[txt_input] -voforg.apache.giraph.io.formats.IdWithValueTextOutputFormat -op /output/[directory_input] -ca giraph.SplitMasterWorker=false`
+
+### Hadoop File System (output, input)
+- For input and output, please read the relevant documentation of how to upload input to Hadoop File system  
+- Listing existing file: -ls
+  - input: `$HADOOP_HOME/bin/hadoop dfs -ls /input`  
+  - output: `$HADOOP_HOME/bin/hadoop dfs -ls /output`  
+- Reading: -cat
+- Uploading file: -put
   `$HADOOP_HOME/bin/hadoop dfs -put [input_file] [hadoop input directory]`  
