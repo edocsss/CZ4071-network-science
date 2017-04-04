@@ -55,7 +55,6 @@ def combine_multiple_distance_distributions(distance_distribution_list):
     return result
 
 
-
 def get_distance_distribution(network, n_process=4):
     n_nodes = network.num_vertices()
     n_edges = network.num_edges()
